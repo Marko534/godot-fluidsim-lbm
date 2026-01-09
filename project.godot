@@ -11,5 +11,20 @@ config_version=5
 [application]
 
 config/name="Winter Forest"
+run/main_scene="uid://wdnvcxxkyl20"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/initial_position_type=3
+window/stretch/mode="canvas_items"
+
+[input]
+
+look={
+"deadzone": 0.2,
+"events": []
+}
