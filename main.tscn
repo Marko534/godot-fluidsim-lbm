@@ -11,10 +11,12 @@ size = Vector2(100, 100)
 
 [sub_resource type="Sky" id="Sky_0xm2m"]
 sky_material = SubResource("PhysicalSkyMaterial_ig7tw")
+radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_h2yge"]
 background_mode = 2
 sky = SubResource("Sky_0xm2m")
+adjustment_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -30,6 +32,7 @@ size = Vector3(4, 4, 4)
 shape = SubResource("WorldBoundaryShape3D_7dm0k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.047036886, -9.536743e-07, 0.023557663)
 mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -37,12 +40,12 @@ environment = SubResource("Environment_h2yge")
 
 [node name="Box" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
+metadata/_edit_group_ = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box"]
 shape = SubResource("BoxShape3D_ig7tw")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Box"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.646147, -0.10379267, -1.3715839)
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
