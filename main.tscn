@@ -8,15 +8,19 @@
 size = Vector2(100, 100)
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_ig7tw"]
+rayleigh_coefficient = 1.0
+rayleigh_color = Color(0.15818876, 0.22490844, 0.3539629, 1)
+turbidity = 100.0
+energy_multiplier = 0.5
 
 [sub_resource type="Sky" id="Sky_0xm2m"]
 sky_material = SubResource("PhysicalSkyMaterial_ig7tw")
-radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_h2yge"]
 background_mode = 2
 sky = SubResource("Sky_0xm2m")
-adjustment_enabled = true
+glow_normalized = true
+fog_light_color = Color(0.08198736, 0.09335431, 0.11104179, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -49,7 +53,9 @@ shape = SubResource("BoxShape3D_ig7tw")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.8735091, 0.041319206, 0.48505145, -0.43927243, 0.4963458, 0.74878603, -0.20981398, -0.867141, 0.4517129, 0, 0, 0)
+transform = Transform3D(0.86090183, 0.0940653, 0.49999997, -0.4685432, 0.5295916, 0.70710677, -0.1982817, -0.8430209, 0.49999997, 0, 0, 0)
+light_color = Color(0.22720465, 0.23754048, 0.32480085, 1)
+light_energy = 0.1
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
