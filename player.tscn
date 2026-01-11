@@ -8,6 +8,8 @@
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_4flbx")
+SPEED_WALK = 2.0
+SPEED_SPRINT = 4.0
 blinking_enabled = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

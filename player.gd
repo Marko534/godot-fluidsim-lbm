@@ -7,12 +7,15 @@ extends CharacterBody3D
 @onready var spotlight_node: SpotLight3D = $Camera3D/SpotLight3D
 
 @export var SPEED_WALK = 3.0      # Horizontal movement speed (units/second)
-var SPEED_SPRINT = SPEED_WALK * 2.0       # Sprint speed (units/second)
+@export var SPEED_SPRINT =  6.0       # Sprint speed (units/second)
 
 const CAMERA_MAX_PITCH: float = deg_to_rad(70)
 const CAMERA_MIN_PITCH: float = deg_to_rad(-89.9)
 const CAMERA_RATIO: float = .625
 
+# Controller look variables
+@export var controller_look_enabled: bool = true
+@export var controller_look_sensitivity: float = 2.0  # Adjust this for controller feel
 # Variables for "game feel" techniques (we'll initialize them later)
 var sprint = false
 var coyote_timer = 0.0
@@ -95,6 +98,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, deceleration_rate)
 		velocity.z = move_toward(velocity.z, 0, deceleration_rate)
 	
+	# Handle controller look (right analog stick)
+	if controller_look_enabled:
+		handle_controller_look(delta)
+	
 	# Handle random blinking
 	if blinking_enabled:
 		update_blinking(delta)
@@ -164,13 +171,30 @@ func _physics_process(delta: float) -> void:
 	foot_land = is_on_floor()
 	
 	# Debug print
-	print("Target Speed: %.2f\t Current Velocity: %.2f\t Moving: %s" % [
-		target_speed,
-		velocity.length(),
-		is_moving
-	])
+	#print("Target Speed: %.2f\t Current Velocity: %.2f\t Moving: %s" % [
+		#target_speed,
+		#velocity.length(),
+		#is_moving
+	#])
 	
 	move_and_slide()
+
+# Handle controller look with right analog stick
+func handle_controller_look(delta: float):
+	# Get right analog stick input
+	var look_horizontal = Input.get_action_strength("look_right") - Input.get_action_strength("look_left")
+	var look_vertical = Input.get_action_strength("look_up") - Input.get_action_strength("look_down")
+	
+	# Only process if there's significant input
+	if abs(look_horizontal) > 0 or abs(look_vertical) > 0:
+		# Scale by sensitivity and delta time for smooth framerate-independent movement
+		var look_vector = Vector2(look_horizontal, look_vertical) * controller_look_sensitivity * delta
+		
+		# Apply camera rotation (inverted Y by default for controllers)
+		_camera_yaw.rotation.y -= look_vector.x
+		_camera_yaw.orthonormalize()
+		_camera_pitch.rotation.x += look_vector.y * CAMERA_RATIO
+		_camera_pitch.rotation.x = clamp(_camera_pitch.rotation.x, CAMERA_MIN_PITCH, CAMERA_MAX_PITCH)
 
 # Calculate headbob offset based on current headbob time
 func calculate_headbob_offset() -> Vector3:
@@ -254,25 +278,3 @@ func rotate_camera(p_relative:Vector2) -> void:
 	_camera_yaw.orthonormalize()
 	_camera_pitch.rotation.x += p_relative.y * mouse_sensitivity * CAMERA_RATIO * mouse_y_inversion 
 	_camera_pitch.rotation.x = clamp(_camera_pitch.rotation.x, CAMERA_MIN_PITCH, CAMERA_MAX_PITCH)
-
-# Start/stop light shake functions (can be called from other scripts)
-func start_light_shake():
-	light_shake_enabled = true
-
-func stop_light_shake():
-	light_shake_enabled = false
-	# Reset to original position when stopping shake
-	if spotlight_node:
-		spotlight_node.position = light_original_pos
-	current_shake_offset = Vector3.ZERO
-
-# Toggle headbob function
-func toggle_headbob():
-	headbob_enabled = not headbob_enabled
-	if not headbob_enabled:
-		_camera_pitch.position = Vector3.ZERO
-		current_headbob_offset = Vector3.ZERO
-
-# Toggle blinking function (optional)
-func toggle_blinking():
-	blinking_enabled = not blinking_enabled
