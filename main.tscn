@@ -1,28 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://wdnvcxxkyl20"]
+[gd_scene load_steps=8 format=3 uid="uid://wdnvcxxkyl20"]
 
+[ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bqqax066cb5t0" path="res://skybox_controller.gd" id="2_h2yge"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 size = Vector2(100, 100)
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
-sky_top_color = Color(0.060297683, 0.0786983, 0.10169951, 1)
-sky_horizon_color = Color(0.0532, 0.061880015, 0.14, 1)
-sky_curve = 0.1
-ground_horizon_color = Color(0.07450981, 0.078431375, 0.14117648, 1)
-ground_curve = 0.1
-
-[sub_resource type="Sky" id="Sky_0xm2m"]
-sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
-
-[sub_resource type="Environment" id="Environment_h2yge"]
-background_mode = 2
-sky = SubResource("Sky_0xm2m")
-fog_enabled = true
-fog_light_color = Color(0.039760523, 0.04263673, 0.08866241, 1)
-fog_density = 0.1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -42,7 +27,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.047036886, -9.536743e-07, 0
 mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_h2yge")
+environment = ExtResource("1_0xm2m")
+script = ExtResource("2_h2yge")
 
 [node name="Box" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
@@ -56,10 +42,16 @@ mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.86090183, 0.0940653, 0.49999997, -0.4685432, 0.5295916, 0.70710677, -0.1982817, -0.8430209, 0.49999997, 0, 0, 0)
-visible = false
 light_color = Color(0.22720465, 0.23754048, 0.32480085, 1)
 light_energy = 0.2
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1090586, 0)
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8609017, 0.09406524, 0.5, -0.46854314, 0.5295917, 0.70710677, -0.19828168, -0.84302104, 0.49999997, 0, 0, 0)
+visible = false
+
+[node name="Moon" type="Node3D" parent="."]
+visible = false
