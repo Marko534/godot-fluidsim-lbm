@@ -7,20 +7,22 @@
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 size = Vector2(100, 100)
 
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_ig7tw"]
-rayleigh_coefficient = 1.0
-rayleigh_color = Color(0.15818876, 0.22490844, 0.3539629, 1)
-turbidity = 100.0
-energy_multiplier = 0.5
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+sky_top_color = Color(0.060297683, 0.0786983, 0.10169951, 1)
+sky_horizon_color = Color(0.0532, 0.061880015, 0.14, 1)
+sky_curve = 0.1
+ground_horizon_color = Color(0.07450981, 0.078431375, 0.14117648, 1)
+ground_curve = 0.1
 
 [sub_resource type="Sky" id="Sky_0xm2m"]
-sky_material = SubResource("PhysicalSkyMaterial_ig7tw")
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
 
 [sub_resource type="Environment" id="Environment_h2yge"]
 background_mode = 2
 sky = SubResource("Sky_0xm2m")
-glow_normalized = true
-fog_light_color = Color(0.08198736, 0.09335431, 0.11104179, 1)
+fog_enabled = true
+fog_light_color = Color(0.039760523, 0.04263673, 0.08866241, 1)
+fog_density = 0.1
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -54,8 +56,9 @@ mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.86090183, 0.0940653, 0.49999997, -0.4685432, 0.5295916, 0.70710677, -0.1982817, -0.8430209, 0.49999997, 0, 0, 0)
+visible = false
 light_color = Color(0.22720465, 0.23754048, 0.32480085, 1)
-light_energy = 0.1
+light_energy = 0.2
 shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("1_ig7tw")]
