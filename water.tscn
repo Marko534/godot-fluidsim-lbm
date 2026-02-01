@@ -3,10 +3,11 @@
 [ext_resource type="Material" uid="uid://ce8qqglbh5my6" path="res://shader/water_shader_material.tres" id="1_qi1wl"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_seble"]
-subdivide_width = 256
-subdivide_depth = 256
+subdivide_width = 64
+subdivide_depth = 64
 orientation = 1
 
 [node name="MeshInstanceFast" type="MeshInstance3D" unique_id=88638164]
+cast_shadow = 0
 mesh = SubResource("QuadMesh_seble")
 surface_material_override/0 = ExtResource("1_qi1wl")
