@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
-[ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://ll1tthvw6mlp" path="res://world_environment.gd" id="2_h2yge"]
+[ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://first_shader.gdshader" id="2_0xm2m"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
@@ -15,6 +14,29 @@ size = Vector3(5, 5, 5)
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
 size = Vector3(4, 4, 4)
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0xm2m"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
+noise = SubResource("FastNoiseLite_0xm2m")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
+noise = SubResource("FastNoiseLite_h2yge")
+as_normal_map = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
+render_priority = 0
+shader = ExtResource("2_0xm2m")
+shader_parameter/height_scale = 0.5
+shader_parameter/noise = SubResource("NoiseTexture2D_0xm2m")
+shader_parameter/normalmap = SubResource("NoiseTexture2D_1bvp3")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
+material = SubResource("ShaderMaterial_h2yge")
+subdivide_width = 32
+subdivide_depth = 32
+
 [node name="Main" type="Node3D" unique_id=1201869165]
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
@@ -26,10 +48,6 @@ shape = SubResource("WorldBoundaryShape3D_7dm0k")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.047036886, -9.536743e-07, 0.023557663)
 mesh = SubResource("PlaneMesh_ig7tw")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1915966006]
-environment = ExtResource("1_0xm2m")
-script = ExtResource("2_h2yge")
-
 [node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
 metadata/_edit_group_ = true
@@ -40,18 +58,21 @@ shape = SubResource("BoxShape3D_ig7tw")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Box" unique_id=2074951902]
 mesh = SubResource("BoxMesh_0xm2m")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1410051155]
-transform = Transform3D(0.86090183, 0.0940653, 0.49999997, -0.4685432, 0.5295916, 0.70710677, -0.1982817, -0.8430209, 0.49999997, 0, 0, 0)
-visible = false
-light_color = Color(0.22720465, 0.23754048, 0.32480085, 1)
-light_energy = 0.2
-
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1090586, 0)
 
-[node name="Sun" type="DirectionalLight3D" parent="." unique_id=385630530]
+[node name="Env" type="Node3D" parent="." unique_id=44473096]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Env" unique_id=1915966006]
+
+[node name="Sun" type="DirectionalLight3D" parent="Env" unique_id=385630530]
 transform = Transform3D(0.8609017, 0.09406524, 0.5, -0.46854314, 0.5295917, 0.70710677, -0.19828168, -0.84302104, 0.49999997, 0, 0, 0)
 visible = false
+light_energy = 0.8
 
-[node name="Moon" type="Node3D" parent="." unique_id=1463443792]
+[node name="Moon" type="Node3D" parent="Env" unique_id=1463443792]
 visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07726002, -2.4455225)
+mesh = SubResource("PlaneMesh_h2yge")
