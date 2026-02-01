@@ -1,8 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://wdnvcxxkyl20"]
+[gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
 [ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://bqqax066cb5t0" path="res://skybox_controller.gd" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://ll1tthvw6mlp" path="res://world_environment.gd" id="2_h2yge"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
@@ -15,43 +15,43 @@ size = Vector3(5, 5, 5)
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
 size = Vector3(4, 4, 4)
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1201869165]
 
-[node name="Floor" type="StaticBody3D" parent="."]
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1000948172]
 shape = SubResource("WorldBoundaryShape3D_7dm0k")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=954571433]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.047036886, -9.536743e-07, 0.023557663)
 mesh = SubResource("PlaneMesh_ig7tw")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1915966006]
 environment = ExtResource("1_0xm2m")
 script = ExtResource("2_h2yge")
 
-[node name="Box" type="StaticBody3D" parent="."]
+[node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
 metadata/_edit_group_ = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box" unique_id=265799742]
 shape = SubResource("BoxShape3D_ig7tw")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box" unique_id=2074951902]
 mesh = SubResource("BoxMesh_0xm2m")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1410051155]
 transform = Transform3D(0.86090183, 0.0940653, 0.49999997, -0.4685432, 0.5295916, 0.70710677, -0.1982817, -0.8430209, 0.49999997, 0, 0, 0)
 visible = false
 light_color = Color(0.22720465, 0.23754048, 0.32480085, 1)
 light_energy = 0.2
 
-[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+[node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1090586, 0)
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=385630530]
 transform = Transform3D(0.8609017, 0.09406524, 0.5, -0.46854314, 0.5295917, 0.70710677, -0.19828168, -0.84302104, 0.49999997, 0, 0, 0)
 visible = false
 
-[node name="Moon" type="Node3D" parent="."]
+[node name="Moon" type="Node3D" parent="." unique_id=1463443792]
 visible = false
