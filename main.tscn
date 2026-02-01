@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
+[ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
@@ -46,6 +47,32 @@ material = SubResource("ShaderMaterial_lquwl")
 size = Vector2(50, 50)
 subdivide_width = 128
 subdivide_depth = 128
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lquwl"]
+size = Vector2(25, 25)
+subdivide_width = 256
+subdivide_depth = 256
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7mycd"]
+noise_type = 3
+frequency = 0.005
+fractal_type = 2
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_272bh"]
+noise = SubResource("FastNoiseLite_7mycd")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
+render_priority = 0
+shader = ExtResource("5_7mycd")
+shader_parameter/TIME_SCALE = 0.7
+shader_parameter/albedo = Color(0, 0.322, 0.431, 1)
+shader_parameter/wave_dir1 = Vector2(1, 0)
+shader_parameter/wave_dir2 = Vector2(0, 1)
+shader_parameter/wave_dir3 = Vector2(0.7, 0.7)
+shader_parameter/wave_dir4 = Vector2(-0.3, 0.8)
+shader_parameter/noise = SubResource("NoiseTexture2D_272bh")
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
 
@@ -103,14 +130,20 @@ shadow_enabled = true
 [node name="Moon" type="Node3D" parent="Env" unique_id=1463443792]
 visible = false
 
-[node name="Water" type="MeshInstance3D" parent="." unique_id=1056650172]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -2, -25)
+[node name="WaterSlow" type="MeshInstance3D" parent="." unique_id=1056650172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -2, -39.437214)
 mesh = SubResource("PlaneMesh_7mycd")
 skeleton = NodePath("../MeshInstance3D")
+
+[node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
+transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, -40, -0.8397317, -2.9681067)
+
+[node name="WaterMe" type="MeshInstance3D" parent="." unique_id=776782405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.345232, -1, 19.785)
+mesh = SubResource("PlaneMesh_lquwl")
+skeleton = NodePath("../MeshInstance3D")
+surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0.5, -2)
 mesh = SubResource("PlaneMesh_h2yge")
-
-[node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
-transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, -40, -2, 25)

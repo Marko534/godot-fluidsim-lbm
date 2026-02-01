@@ -2,12 +2,11 @@
 
 [ext_resource type="Material" uid="uid://ce8qqglbh5my6" path="res://shader/water_shader_material.tres" id="1_qi1wl"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_seble"]
-subdivide_width = 64
-subdivide_depth = 64
-orientation = 1
+[sub_resource type="PlaneMesh" id="PlaneMesh_qi1wl"]
+subdivide_width = 512
+subdivide_depth = 512
 
 [node name="MeshInstanceFast" type="MeshInstance3D" unique_id=88638164]
 cast_shadow = 0
-mesh = SubResource("QuadMesh_seble")
+mesh = SubResource("PlaneMesh_qi1wl")
 surface_material_override/0 = ExtResource("1_qi1wl")
