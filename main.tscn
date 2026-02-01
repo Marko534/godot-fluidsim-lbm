@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
+[ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
-[ext_resource type="Shader" uid="uid://d1fao7w0cluo2" path="res://shader/second_shader.gdshader" id="3_1bvp3"]
+[ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
@@ -15,19 +16,37 @@ size = Vector3(5, 5, 5)
 [sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
 size = Vector3(4, 4, 4)
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
 render_priority = 0
 shader = ExtResource("3_1bvp3")
-shader_parameter/height_scale = 5.0
-shader_parameter/noise = SubResource("NoiseTexture2D_0xm2m")
+shader_parameter/wave_frequency = 0.6
+shader_parameter/wave_height_div = 2.5
+shader_parameter/wave_weight_scale = 0.8
+shader_parameter/wave_freq_scale = 1.2
+shader_parameter/wave_time_scale = 1.095
+shader_parameter/wave_rotation = 1.21
+shader_parameter/wave_drag = 0.9
+shader_parameter/scroll_speed = 1.5
+shader_parameter/scroll_dir = Vector2(1, 1)
+shader_parameter/horizontal_scale = 1.1
+shader_parameter/occlusion_speed = 1.4
+shader_parameter/spec_offset = 0.13
+shader_parameter/water_color = Color(0.4476723, 0.6259423, 0.7536278, 1)
+shader_parameter/sky_color = Color(0.4, 0.7, 1, 1)
+shader_parameter/sun_color = Color(0.9, 0.95, 1, 1)
+shader_parameter/depth_color = Color(0, 0.5913961, 0.66948473, 1)
+shader_parameter/fresnel_power = 5.0
+shader_parameter/reflection_strength = 0.9
+shader_parameter/refraction_strength = 2.5
+shader_parameter/sun_rotation = Vector2(-0.3, -0.25)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_7mycd"]
 material = SubResource("ShaderMaterial_lquwl")
 size = Vector2(100, 100)
 subdivide_width = 128
 subdivide_depth = 128
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
 
@@ -73,16 +92,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1090586, 0)
 [node name="Env" type="Node3D" parent="." unique_id=44473096]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Env" unique_id=1915966006]
+environment = ExtResource("1_0xm2m")
 
 [node name="Sun" type="DirectionalLight3D" parent="Env" unique_id=385630530]
 transform = Transform3D(0.8609017, 0.09406531, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
+visible = false
 shadow_enabled = true
 
 [node name="Moon" type="Node3D" parent="Env" unique_id=1463443792]
 visible = false
 
 [node name="Water" type="MeshInstance3D" parent="." unique_id=1056650172]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65, -2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65.14366, -1.9244881, 0.06212616)
 mesh = SubResource("PlaneMesh_7mycd")
 skeleton = NodePath("../MeshInstance3D")
 
