@@ -1,0 +1,50 @@
+# Blender 5.0.1 MTL File: 'tree.blend'
+# www.blender.org
+
+newmtl bark
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd source/yggrassil_02/RedMapleBark.png
+map_Bump -bm 2.000000 textures/RedMapleBark_Normal.png
+
+newmtl cap
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd source/yggrassil_02/Arbres_Cap_yggdrassil_D_02.png
+map_d source/yggrassil_02/Arbres_Cap_yggdrassil_D_02.png
+map_Bump -bm 2.000000 source/yggrassil_02/Arbres_Cap_yggdrassil_NM.png
+
+newmtl leaves
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd textures/Red_Maple_Leaves_Hero_Fall_2.png
+map_d textures/Red_Maple_Leaves_Hero_Fall_2.png
+map_Bump -bm 1.000000 textures/Red_Maple_Leaves_Hero_Fall_2_Normal.png

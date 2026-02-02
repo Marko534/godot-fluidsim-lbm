@@ -6,11 +6,20 @@
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
+[ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_272bh"]
+[ext_resource type="ArrayMesh" uid="uid://mbiagkcmkvnc" path="res://tree/tree.obj" id="8_5vw27"]
+[ext_resource type="Shader" uid="uid://bwh0knkk2jk0c" path="res://tree/leaves.gdshader" id="9_kek77"]
+[ext_resource type="Shader" uid="uid://bylcbr8pu4x7c" path="res://tree/trunk.gdshader" id="9_ycdy4"]
+[ext_resource type="Texture2D" uid="uid://e4u5g547mg57" path="res://tree/textures/Red_Maple_Leaves_Hero_Fall_2.png" id="10_4c57u"]
+[ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
+[ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 size = Vector2(30, 100)
+subdivide_width = 64
+subdivide_depth = 64
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -66,7 +75,7 @@ seamless = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
 render_priority = 0
 shader = ExtResource("5_7mycd")
-shader_parameter/TIME_SCALE = 0.7
+shader_parameter/TIME_SCALE = 1.0
 shader_parameter/albedo = Color(0, 0.322, 0.431, 1)
 shader_parameter/wave_dir1 = Vector2(1, 0)
 shader_parameter/wave_dir2 = Vector2(0, 1)
@@ -93,6 +102,25 @@ shader_parameter/normalmap = SubResource("NoiseTexture2D_1bvp3")
 material = SubResource("ShaderMaterial_h2yge")
 subdivide_width = 32
 subdivide_depth = 32
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
+render_priority = 0
+shader = ExtResource("9_ycdy4")
+shader_parameter/texture_albedo = ExtResource("10_w48qg")
+shader_parameter/texture_normal = ExtResource("11_vivmo")
+shader_parameter/transmission = Color(0, 0, 0, 1)
+shader_parameter/sway_speed = 10.0
+shader_parameter/sway_strength = 0.01
+shader_parameter/sway_phase_len = 8.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4c57u"]
+render_priority = 0
+shader = ExtResource("9_kek77")
+shader_parameter/texture_albedo = ExtResource("10_4c57u")
+shader_parameter/transmission = Color(0, 0, 0, 1)
+shader_parameter/sway_speed = 5.0
+shader_parameter/sway_strength = 0.2
+shader_parameter/sway_phase_len = 8.0
 
 [node name="Main" type="Node3D" unique_id=1201869165]
 
@@ -147,3 +175,12 @@ surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0.5, -2)
 mesh = SubResource("PlaneMesh_h2yge")
+
+[node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
+
+[node name="Tree" type="MeshInstance3D" parent="." unique_id=2119363092]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
+mesh = ExtResource("8_5vw27")
+surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
+surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
