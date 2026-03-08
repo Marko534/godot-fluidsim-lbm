@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_272bh"]
+[ext_resource type="FastNoiseLite" uid="uid://dymtum4fjqlab" path="res://new_fast_noise_lite.tres" id="7_w48qg"]
 [ext_resource type="ArrayMesh" uid="uid://mbiagkcmkvnc" path="res://tree/tree.obj" id="8_5vw27"]
 [ext_resource type="Shader" uid="uid://bwh0knkk2jk0c" path="res://tree/leaves.gdshader" id="9_kek77"]
 [ext_resource type="Shader" uid="uid://bylcbr8pu4x7c" path="res://tree/trunk.gdshader" id="9_ycdy4"]
@@ -84,11 +85,12 @@ shader_parameter/wave_dir4 = Vector2(-0.3, 0.8)
 shader_parameter/noise = SubResource("NoiseTexture2D_272bh")
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
+noise = ExtResource("7_w48qg")
+seamless = true
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
-noise = SubResource("FastNoiseLite_h2yge")
+noise = ExtResource("7_w48qg")
+seamless = true
 as_normal_map = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
@@ -152,7 +154,6 @@ environment = ExtResource("1_0xm2m")
 
 [node name="Sun" type="DirectionalLight3D" parent="Env" unique_id=385630530]
 transform = Transform3D(0.8609017, 0.09406531, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
-visible = false
 shadow_enabled = true
 
 [node name="Moon" type="Node3D" parent="Env" unique_id=1463443792]
@@ -181,6 +182,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
 
 [node name="Tree" type="MeshInstance3D" parent="." unique_id=2119363092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
+visible = false
 mesh = ExtResource("8_5vw27")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
