@@ -1,11 +1,6 @@
-/*
-    Lattice Boltzmann Method Helper Compute Shader File
-    Contains almost all relevant methods for the LBM!
-*/
-
 // Main Buffers and Parameters
-#[compute]
-#version 460 
+// #[compute]
+// #version 460 
 
 
 layout (std430, binding = 0) buffer f {
@@ -22,12 +17,25 @@ layout (std430, binding = 2) buffer b {
 
 // Size of Domain
 
-uniform int NX = 1;
-uniform int NY = 1;
-uniform int NZ = 1;
+// Pass from Godot Script
 
-uniform float t = 0.0f;
-vec3 force = 0.1*vec3(cos(t), 0, sin(t));
+// uniform int NX = 1;
+// uniform int NY = 1;
+// uniform int NZ = 1;
+
+// uniform float t = 0.0f;
+
+layout(std140, binding = 5) uniform SimParams {
+    int NX;
+    int NY;
+    int NZ;
+    float t;
+} params;
+
+// vec3 force = 0.1*vec3(cos(t), 0, sin(t));
+
+vec3 force = 0.1*vec3(cos(params.t), 0, sin(params.t));
+
 //vec3 force = 0.1*vec3(1, 0, 0);//vec3(cos(t), 0, sin(t));
 
 // Velocity Set

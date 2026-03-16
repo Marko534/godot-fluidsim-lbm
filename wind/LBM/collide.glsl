@@ -1,5 +1,5 @@
 #[compute]
-#version 460 
+#version 460 core
 // core
 
 layout(local_size_x = 16, local_size_y = 1, local_size_z = 16) in;
@@ -19,7 +19,7 @@ const float dt = 1.0;
 
 void main(){
 
-  const uint ind = (gl_GlobalInvocationID.x*NY + gl_GlobalInvocationID.y)*NZ + gl_GlobalInvocationID.z;
+  const uint ind = (gl_GlobalInvocationID.x*params.NY + gl_GlobalInvocationID.y)*params.NZ + gl_GlobalInvocationID.z;
 
   const float _rho = getRho(ind);
   vec3 _v = getV(ind)/_rho;

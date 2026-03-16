@@ -15,7 +15,7 @@ layout (std430, binding = 4) buffer v {
 
 void main(){
 
-  uint ind = (gl_GlobalInvocationID.x*NY + gl_GlobalInvocationID.y)*NZ + gl_GlobalInvocationID.z;
+  uint ind = (gl_GlobalInvocationID.x*params.NY + gl_GlobalInvocationID.y)*params.NZ + gl_GlobalInvocationID.z;
 
   // Initialize the Boltzmann Distribution
 
