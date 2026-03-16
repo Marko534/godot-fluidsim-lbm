@@ -2,6 +2,7 @@
 
 [ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://main.gd" id="1_vivmo"]
 [ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
@@ -125,6 +126,7 @@ shader_parameter/sway_strength = 0.2
 shader_parameter/sway_phase_len = 8.0
 
 [node name="Main" type="Node3D" unique_id=1201869165]
+script = ExtResource("1_vivmo")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 
@@ -136,7 +138,6 @@ mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
-metadata/_edit_group_ = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box" unique_id=265799742]
 shape = SubResource("BoxShape3D_ig7tw")
