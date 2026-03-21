@@ -2,6 +2,8 @@ extends Node3D
 
 # --- Constants ---
 const TEXTURE_SIZE  : int   = 64
+const LAYOUT_SIZE 	: int = 32
+const WORKGROUPS	: int = TEXTURE_SIZE / LAYOUT_SIZE
 const SAVE_INTERVAL : float = 2.0
 const MAX_SAVES     : int   = 8
 
@@ -21,10 +23,16 @@ var save_index  : int   = 0
 # -------------------------------------------------------------------------
 func _ready() -> void:
 	rd = RenderingServer.get_rendering_device()
+	_print_GPU_info()
 	_create_texture()
 	_bind_texture_to_material()
 	_setup_compute()
 
+func _print_GPU_info() -> void:
+	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X))
+	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y))
+	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS))
+	
 # -------------------------------------------------------------------------
 func _create_texture() -> void:
 	var tf        := RDTextureFormat.new()
@@ -89,17 +97,16 @@ func _update_time_buffer() -> void:
 
 # -------------------------------------------------------------------------
 func _dispatch_compute() -> void:
-	var workgroups  := TEXTURE_SIZE / 8
 	var compute_list = rd.compute_list_begin()
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
 	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, workgroups, workgroups, 1)
+	rd.compute_list_dispatch(compute_list, WORKGROUPS, WORKGROUPS, 1)
 	rd.compute_list_end()
 
 # -------------------------------------------------------------------------
 func save_texture_as_png(path: String) -> void:
-	rd.submit()
-	rd.sync()
+	#rd.submit()
+	#rd.sync()
 
 	var raw_bytes := rd.texture_get_data(shared_texture_rid, 0)
 	var img       := Image.create_from_data(TEXTURE_SIZE, TEXTURE_SIZE, false, Image.FORMAT_RGBAF, raw_bytes)
