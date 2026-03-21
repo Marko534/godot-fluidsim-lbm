@@ -12,7 +12,7 @@ void vertex() {
 
     float compute_height = texture(compute_output, tex_position).r;
 
-    VERTEX.y += compute_height * height_scale;
+    //VERTEX.y += compute_height * height_scale;
 }
 
 void fragment() {

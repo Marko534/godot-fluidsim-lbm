@@ -1,115 +1,202 @@
 extends Node3D
 
-# --- Constants ---
-const TEXTURE_SIZE  : int   = 64
-const LAYOUT_SIZE 	: int = 32
-const WORKGROUPS	: int = TEXTURE_SIZE / LAYOUT_SIZE
-const SAVE_INTERVAL : float = 2.0
-const MAX_SAVES     : int   = 8
+# --- LBM Grid Dimensions ---
+const NX: int = 64
+const NY: int = 32
+const NZ: int = 64
+const Q: int = 19
 
 # --- Rendering ---
-var rd                : RenderingDevice
+var rd: RenderingDevice
+
+# --- Buffers ---
+var buf_f: RID # distribution functions
+var buf_fprop: RID # post-collision
+var buf_b: RID # boundary
+var buf_rho: RID # density
+var buf_v: RID # velocity (vec4 per cell)
+var buf_params: RID # SimParams uniform buffer
+
+# --- Pipelines ---
+var pipeline_init: RID
+var pipeline_collide: RID
+var pipeline_stream: RID
+
+# --- Uniform Sets ---
+var uset_init: RID
+var uset_collide: RID
+var uset_stream: RID
+
+# --- Output texture for material ---
 var shared_texture_rid: RID
-var godot_texture     : Texture2DRD
-var pipeline          : RID
-var uniform_set       : RID
-var time_buffer       : RID
+var godot_texture: Texture2DRD
 
 # --- State ---
 var elapsed_time: float = 0.0
-var save_timer  : float = 0.0
-var save_index  : int   = 0
+var initialized: bool = false
 
 # -------------------------------------------------------------------------
 func _ready() -> void:
 	rd = RenderingServer.get_rendering_device()
-	_print_GPU_info()
-	_create_texture()
-	_bind_texture_to_material()
-	_setup_compute()
+	_create_buffers()
+	_create_output_texture()
+	_setup_pipelines()
+	_run_init()
+	initialized = true
 
-func _print_GPU_info() -> void:
-	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_X))
-	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_SIZE_Y))
-	print(rd.limit_get(RenderingDevice.LIMIT_MAX_COMPUTE_WORKGROUP_INVOCATIONS))
-	
 # -------------------------------------------------------------------------
-func _create_texture() -> void:
-	var tf        := RDTextureFormat.new()
-	tf.width       = TEXTURE_SIZE
-	tf.height      = TEXTURE_SIZE
-	tf.format      = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
-	tf.usage_bits  = (
-		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT      |  # compute can write
-		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT     |  # material can sample
-		RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT   |
-		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT   # needed for readback
+func _create_buffers() -> void:
+	var cell_count := NX * NY * NZ
+	var float_bytes := 4
+
+	# F and FPROP: one float per direction per cell
+	buf_f = rd.storage_buffer_create(cell_count * Q * float_bytes)
+	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
+
+	# Boundary: one float per cell ( get from heat map from env)
+	var boundary := PackedFloat32Array()
+	boundary.resize(cell_count)
+	for x in NX:
+		for y in NY:
+			for z in NZ:
+				var i := (x * NY + y) * NZ + z
+				var dx := x - NX / 2.0
+				var dy := y - NY / 2.0
+				var dz := z - NZ / 2.0
+				boundary[i] = 1.0 if sqrt(dx * dx + dy * dy + dz * dz) < 5.0 else 0.0
+	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
+
+	# Density and velocity
+	buf_rho = rd.storage_buffer_create(cell_count * float_bytes)
+	buf_v = rd.storage_buffer_create(cell_count * 4 * float_bytes) # vec4
+
+	# SimParams uniform buffer: NX, NY, NZ (ints) + t (float) = 16 bytes
+	buf_params = rd.uniform_buffer_create(16)
+
+# -------------------------------------------------------------------------
+func _create_output_texture() -> void:
+	# Use a 2D slice of the velocity field for the material shader
+	# XZ plane at mid-height (y = NY/2)
+	var tf := RDTextureFormat.new()
+	tf.width = NX
+	tf.height = NZ
+	tf.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+	tf.usage_bits = (
+		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT |
+		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT |
+		RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT |
+		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT
 	)
 	shared_texture_rid = rd.texture_create(tf, RDTextureView.new(), [])
 
-# -------------------------------------------------------------------------
-func _bind_texture_to_material() -> void:
-	godot_texture                = Texture2DRD.new()
+	godot_texture = Texture2DRD.new()
 	godot_texture.texture_rd_rid = shared_texture_rid
 
 	var mat: ShaderMaterial = $MeshInstance3D.get_active_material(0)
 	mat.set_shader_parameter("compute_output", godot_texture)
 
 # -------------------------------------------------------------------------
-func _setup_compute() -> void:
-	var shader_file  := load("res://wind/compute_example.glsl")
-	var shader_spirv : RDShaderSPIRV = shader_file.get_spirv()
-	var shader       := rd.shader_create_from_spirv(shader_spirv)
+func _make_uniform_set(shader: RID) -> RID:
+	# All shaders share the same buffer layout (bindings 0-5)
+	var uniforms: Array[RDUniform] = []
 
-	time_buffer = rd.uniform_buffer_create(16)  # std140 minimum 16 bytes
+	var bindings = [
+		[buf_f, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
+		[buf_fprop, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
+		[buf_b, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
+		[buf_rho, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 3],
+		[buf_v, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 4],
+		[buf_params, RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 5],
+	]
 
-	var tex_uniform                := RDUniform.new()
-	tex_uniform.uniform_type        = RenderingDevice.UNIFORM_TYPE_IMAGE
-	tex_uniform.binding             = 0
-	tex_uniform.add_id(shared_texture_rid)
+	for entry in bindings:
+		var u := RDUniform.new()
+		u.uniform_type = entry[1]
+		u.binding = entry[2]
+		u.add_id(entry[0])
+		uniforms.append(u)
 
-	var time_uniform               := RDUniform.new()
-	time_uniform.uniform_type       = RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER
-	time_uniform.binding            = 1
-	time_uniform.add_id(time_buffer)
-
-	uniform_set = rd.uniform_set_create([tex_uniform, time_uniform], shader, 0)
-	pipeline    = rd.compute_pipeline_create(shader)
-
-# -------------------------------------------------------------------------
-func _process(delta: float) -> void:
-	elapsed_time += delta
-	save_timer   += delta
-
-	_update_time_buffer()
-	_dispatch_compute()
-
-	if save_timer >= SAVE_INTERVAL:
-		save_timer  = 0.0
-		var path   := "res://debug/compute_debug_%d_%d.png" % [TEXTURE_SIZE, save_index % MAX_SAVES]
-		save_texture_as_png(path)
-		save_index += 1
+	return rd.uniform_set_create(uniforms, shader, 0)
 
 # -------------------------------------------------------------------------
-func _update_time_buffer() -> void:
-	var time_data := PackedFloat32Array([elapsed_time, 0.0, 0.0, 0.0])
-	rd.buffer_update(time_buffer, 0, 16, time_data.to_byte_array())
+func _setup_pipelines() -> void:
+	var init_shader := _load_shader("res://wind/LBM/init.glsl")
+	var collide_shader := _load_shader("res://wind/LBM/collide.glsl")
+	var stream_shader := _load_shader("res://wind/LBM/stream.glsl")
+
+	pipeline_init = rd.compute_pipeline_create(init_shader)
+	pipeline_collide = rd.compute_pipeline_create(collide_shader)
+	pipeline_stream = rd.compute_pipeline_create(stream_shader)
+
+	uset_init = _make_uniform_set(init_shader)
+	uset_collide = _make_uniform_set(collide_shader)
+	uset_stream = _make_uniform_set(stream_shader)
+
+func _load_shader(path: String) -> RID:
+	var file: RDShaderFile = load(path)
+	var spirv: RDShaderSPIRV = file.get_spirv()
+	return rd.shader_create_from_spirv(spirv)
 
 # -------------------------------------------------------------------------
-func _dispatch_compute() -> void:
+func _run_init() -> void:
+	_update_params()
 	var compute_list = rd.compute_list_begin()
-	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
-	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, WORKGROUPS, WORKGROUPS, 1)
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_init)
+	rd.compute_list_bind_uniform_set(compute_list, uset_init, 0)
+	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
 	rd.compute_list_end()
 
 # -------------------------------------------------------------------------
-func save_texture_as_png(path: String) -> void:
-	#rd.submit()
-	#rd.sync()
+func _process(delta: float) -> void:
+	if not initialized:
+		return
 
-	var raw_bytes := rd.texture_get_data(shared_texture_rid, 0)
-	var img       := Image.create_from_data(TEXTURE_SIZE, TEXTURE_SIZE, false, Image.FORMAT_RGBAF, raw_bytes)
-	img.convert(Image.FORMAT_RGBA8)
-	img.save_png(path)
-	print("Saved debug texture to: ", path)
+	elapsed_time += delta
+	_update_params()
+
+	var compute_list = rd.compute_list_begin()
+
+	# Collide
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
+	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
+	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
+
+	# Stream
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
+	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
+	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
+
+	rd.compute_list_end()
+
+	_copy_velocity_slice_to_texture()
+
+# -------------------------------------------------------------------------
+func _update_params() -> void:
+	# Pack: NX(int), NY(int), NZ(int), t(float) — all 4 bytes each = 16 bytes
+	var data := PackedByteArray()
+	data.resize(16)
+	data.encode_s32(0, NX)
+	data.encode_s32(4, NY)
+	data.encode_s32(8, NZ)
+	data.encode_float(12, elapsed_time)
+	rd.buffer_update(buf_params, 0, 16, data)
+
+# -------------------------------------------------------------------------
+func _copy_velocity_slice_to_texture() -> void:
+	# Read the XZ velocity slice at y = NY/2 from buf_v into the texture
+	# so the material shader can sample wind direction
+	var mid_y := NY / 2
+	var raw := rd.buffer_get_data(buf_v)
+	var floats := raw.to_float32_array()
+	var img_data := PackedByteArray()
+	img_data.resize(NX * NZ * 16) # vec4 = 4 floats = 16 bytes per pixel
+
+	for x in NX:
+		for z in NZ:
+			var cell_idx := (x * NY + mid_y) * NZ + z
+			var src_byte := cell_idx * 4 * 4 # 4 floats * 4 bytes
+			var dst_byte := (x * NZ + z) * 16
+			for b in 16:
+				img_data[dst_byte + b] = raw[src_byte + b]
+
+	rd.texture_update(shared_texture_rid, 0, img_data)
