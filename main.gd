@@ -46,9 +46,10 @@ func _ready() -> void:
 	_create_output_texture()
 	_setup_pipelines()
 	#$MeshInstance3D.scale = Vector3(NX, 1, NZ)
-	$MeshInstance3D.scale = Vector3(2, 1, 2)
 	_run_init()
 	initialized = true
+
+@export var noise: FastNoiseLite
 
 # -------------------------------------------------------------------------
 func _create_buffers() -> void:
@@ -60,18 +61,9 @@ func _create_buffers() -> void:
 	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
 
 	# Boundary: one float per cell ( get from heat map from env)
-	var boundary := PackedFloat32Array()
-	boundary.resize(cell_count)
-	for x in NX:
-		for y in NY:
-			for z in NZ:
-				var i := (x * NY + y) * NZ + z
-				var dx := x - NX / 2.0
-				var dy := y - NY / 2.0
-				var dz := z - NZ / 2.0
-				boundary[i] = 1.0 if sqrt(dx * dx + dy * dy + dz * dz) < 5.0 else 0.0
+	var boundary := _create_boundary_from_noise()
 	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
-
+	
 	# Density and velocity
 	buf_rho = rd.storage_buffer_create(cell_count * float_bytes)
 	buf_v = rd.storage_buffer_create(cell_count * 4 * float_bytes) # vec4
@@ -220,3 +212,24 @@ func _make_uniform_set_slice(shader: RID) -> RID:
 	uniforms.append(tex_uniform)
 
 	return rd.uniform_set_create(uniforms, shader, 0)
+	
+func _create_boundary_from_noise() -> PackedFloat32Array:
+	var boundary := PackedFloat32Array()
+	boundary.resize(NX * NY * NZ)
+
+	# Get noise as image (already 64x64)
+	var img := noise.get_image(NX, NZ)
+
+	for x in NX:
+		for z in NZ:
+			# Sample noise pixel — red channel is height 0..1
+			var height_norm  := img.get_pixel(x, z).r
+			# Map 0..1 height to 0..NY cell height
+			var height_cell  := int(height_norm * NY)
+
+			for y in NY:
+				var i        := (x * NY + y) * NZ + z
+				# Solid below height, fluid above
+				boundary[i]  = 1.0 if y < height_cell else 0.0
+
+	return boundary

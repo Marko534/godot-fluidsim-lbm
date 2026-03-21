@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://main.gd" id="1_vivmo"]
 [ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
+[ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://terrain/noise.tres" id="3_2cqfq"]
+[ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://terrain/tarrain.gdshader" id="3_yaehf"]
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_272bh"]
@@ -15,12 +17,30 @@
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
 
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_w48qg"]
+map_width = 32
+map_depth = 32
+map_data = PackedFloat32Array(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
+width = 64
+height = 64
+noise = ExtResource("3_2cqfq")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_074og"]
+render_priority = 0
+shader = ExtResource("3_yaehf")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_yaehf")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cegan"]
+material = SubResource("ShaderMaterial_074og")
+subdivide_width = 64
+subdivide_depth = 64
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 size = Vector2(30, 100)
-subdivide_width = 64
-subdivide_depth = 64
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -94,9 +114,8 @@ shader_parameter/NZ = 64
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
 material = SubResource("ShaderMaterial_h2yge")
-size = Vector2(1, 1)
-subdivide_width = 32
-subdivide_depth = 32
+subdivide_width = 64
+subdivide_depth = 64
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
 render_priority = 0
@@ -119,6 +138,18 @@ shader_parameter/sway_phase_len = 8.0
 
 [node name="Main" type="Node3D" unique_id=1201869165]
 script = ExtResource("1_vivmo")
+noise = ExtResource("3_2cqfq")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=76560686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5105944, 1.8899194, 0)
+
+[node name="Terrain" type="CollisionShape3D" parent="StaticBody3D" unique_id=843316789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26490843, 0)
+shape = SubResource("HeightMapShape3D_w48qg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1054310523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.622372, -2.7898796, -4.161523)
+mesh = SubResource("PlaneMesh_cegan")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 
@@ -158,7 +189,7 @@ mesh = SubResource("PlaneMesh_7mycd")
 skeleton = NodePath("../MeshInstance3D")
 
 [node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
-transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, -40, -0.8397317, -2.9681067)
+transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, 55.637726, -0.8397317, -2.9681067)
 
 [node name="WaterMe" type="MeshInstance3D" parent="." unique_id=776782405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.345232, -1, 19.785)
@@ -167,7 +198,7 @@ skeleton = NodePath("../MeshInstance3D")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
-transform = Transform3D(1, 0, 0, 0, 0.72211045, -0.69177777, 0, 0.69177777, 0.72211045, -13.4217615, 0.5, -7.713776)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.230488, -0.7592006, -7.713776)
 mesh = SubResource("PlaneMesh_h2yge")
 
 [node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
