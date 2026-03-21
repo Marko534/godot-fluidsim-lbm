@@ -175,7 +175,7 @@ skeleton = NodePath("../MeshInstance3D")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 0.5, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4217615, 0.5, -7.713776)
 mesh = SubResource("PlaneMesh_h2yge")
 
 [node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
