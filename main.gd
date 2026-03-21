@@ -7,7 +7,11 @@ var pipeline: RID
 var uniform_set: RID
 var time_buffer: RID
 var elapsed_time: float = 0.0
-const texture_size: int = 512 /2 
+const texture_size: int = 512
+var save_timer: float = 0.0
+const save_interval: float = 2.0
+var save_index: int = 0
+const max_saves: int = 8
 
 func _ready() -> void:
 	rd = RenderingServer.get_rendering_device()
@@ -52,6 +56,7 @@ func _setup_compute() -> void:
 
 func _process(delta: float) -> void:
 	elapsed_time += delta
+	save_timer += delta
 
 	var time_data := PackedFloat32Array([elapsed_time, 0.0, 0.0, 0.0])
 	rd.buffer_update(time_buffer, 0, 16, time_data.to_byte_array())
@@ -63,15 +68,17 @@ func _process(delta: float) -> void:
 	rd.compute_list_end()
 
 	# Save PNG once after first frame for debugging
-	if elapsed_time < delta * 2:
-		save_texture_as_png("res://compute_debug.png")
+	if save_timer >= save_interval:
+		save_timer = 0.0
+		var path := "res://debug/compute_debug_%d_%d.png" % [texture_size, save_index % max_saves]		
+		save_texture_as_png(path)
+		save_index += 1
 
 func save_texture_as_png(path: String) -> void:
 	rd.submit()
 	rd.sync()
-
 	var raw_bytes := rd.texture_get_data(shared_texture_rid, 0)
-	var img := Image.create_from_data(8, 8, false, Image.FORMAT_RGBAF, raw_bytes)
+	var img := Image.create_from_data(texture_size, texture_size, false, Image.FORMAT_RGBAF, raw_bytes)
 	img.convert(Image.FORMAT_RGBA8)
 	img.save_png(path)
 	print("Saved debug texture to: ", path)
