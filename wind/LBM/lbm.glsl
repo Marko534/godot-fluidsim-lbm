@@ -126,3 +126,5 @@ vec3 getV(uint index){
   return v;
 
 }
+
+layout(set = 0, binding = 6, rgba32f) uniform restrict writeonly image3D velocity_tex_3d;

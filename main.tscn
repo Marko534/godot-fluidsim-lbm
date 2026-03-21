@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_272bh"]
-[ext_resource type="FastNoiseLite" uid="uid://dymtum4fjqlab" path="res://new_fast_noise_lite.tres" id="7_w48qg"]
 [ext_resource type="ArrayMesh" uid="uid://mbiagkcmkvnc" path="res://tree/tree.obj" id="8_5vw27"]
 [ext_resource type="Shader" uid="uid://bwh0knkk2jk0c" path="res://tree/leaves.gdshader" id="9_kek77"]
 [ext_resource type="Shader" uid="uid://bylcbr8pu4x7c" path="res://tree/trunk.gdshader" id="9_ycdy4"]
@@ -85,24 +84,17 @@ shader_parameter/wave_dir3 = Vector2(0.7, 0.7)
 shader_parameter/wave_dir4 = Vector2(-0.3, 0.8)
 shader_parameter/noise = SubResource("NoiseTexture2D_272bh")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
-noise = ExtResource("7_w48qg")
-seamless = true
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
-noise = ExtResource("7_w48qg")
-seamless = true
-as_normal_map = true
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
 render_priority = 0
 shader = ExtResource("2_0xm2m")
 shader_parameter/height_scale = 0.5
-shader_parameter/noise = SubResource("NoiseTexture2D_0xm2m")
-shader_parameter/normalmap = SubResource("NoiseTexture2D_1bvp3")
+shader_parameter/NX = 64
+shader_parameter/NY = 32
+shader_parameter/NZ = 64
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
 material = SubResource("ShaderMaterial_h2yge")
+size = Vector2(1, 1)
 subdivide_width = 32
 subdivide_depth = 32
 
@@ -175,7 +167,7 @@ skeleton = NodePath("../MeshInstance3D")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4217615, 0.5, -7.713776)
+transform = Transform3D(1, 0, 0, 0, 0.72211045, -0.69177777, 0, 0.69177777, 0.72211045, -13.4217615, 0.5, -7.713776)
 mesh = SubResource("PlaneMesh_h2yge")
 
 [node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]

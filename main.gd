@@ -29,11 +29,15 @@ var uset_stream: RID
 
 # --- Output texture for material ---
 var shared_texture_rid: RID
-var godot_texture: Texture2DRD
+var godot_texture_3d: Texture3DRD = Texture3DRD.new()
 
 # --- State ---
 var elapsed_time: float = 0.0
 var initialized: bool = false
+
+# --- Slice ---
+var pipeline_slice: RID
+var uset_slice: RID
 
 # -------------------------------------------------------------------------
 func _ready() -> void:
@@ -41,6 +45,8 @@ func _ready() -> void:
 	_create_buffers()
 	_create_output_texture()
 	_setup_pipelines()
+	#$MeshInstance3D.scale = Vector3(NX, 1, NZ)
+	$MeshInstance3D.scale = Vector3(2, 1, 2)
 	_run_init()
 	initialized = true
 
@@ -75,25 +81,27 @@ func _create_buffers() -> void:
 
 # -------------------------------------------------------------------------
 func _create_output_texture() -> void:
-	# Use a 2D slice of the velocity field for the material shader
-	# XZ plane at mid-height (y = NY/2)
+	# 3D texture matching the LBM grid exactly
 	var tf := RDTextureFormat.new()
 	tf.width = NX
-	tf.height = NZ
+	tf.height = NY
+	tf.depth = NZ
+	tf.array_layers = 1
 	tf.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+	tf.texture_type = RenderingDevice.TEXTURE_TYPE_3D
 	tf.usage_bits = (
-		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT |
-		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT |
+		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT | # slice shader writes
+		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | # material reads
 		RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT |
 		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT
 	)
 	shared_texture_rid = rd.texture_create(tf, RDTextureView.new(), [])
 
-	godot_texture = Texture2DRD.new()
-	godot_texture.texture_rd_rid = shared_texture_rid
+	# Texture3DRD bridges the RD texture to Godot's material system
+	godot_texture_3d.texture_rd_rid = shared_texture_rid
 
 	var mat: ShaderMaterial = $MeshInstance3D.get_active_material(0)
-	mat.set_shader_parameter("compute_output", godot_texture)
+	mat.set_shader_parameter("wind_volume", godot_texture_3d)
 
 # -------------------------------------------------------------------------
 func _make_uniform_set(shader: RID) -> RID:
@@ -123,14 +131,17 @@ func _setup_pipelines() -> void:
 	var init_shader := _load_shader("res://wind/LBM/init.glsl")
 	var collide_shader := _load_shader("res://wind/LBM/collide.glsl")
 	var stream_shader := _load_shader("res://wind/LBM/stream.glsl")
+	var slice_shader := _load_shader("res://wind/LBM/slice.glsl")
 
 	pipeline_init = rd.compute_pipeline_create(init_shader)
 	pipeline_collide = rd.compute_pipeline_create(collide_shader)
 	pipeline_stream = rd.compute_pipeline_create(stream_shader)
+	pipeline_slice = rd.compute_pipeline_create(slice_shader)
 
 	uset_init = _make_uniform_set(init_shader)
 	uset_collide = _make_uniform_set(collide_shader)
 	uset_stream = _make_uniform_set(stream_shader)
+	uset_slice = _make_uniform_set_slice(slice_shader)
 
 func _load_shader(path: String) -> RID:
 	var file: RDShaderFile = load(path)
@@ -156,20 +167,22 @@ func _process(delta: float) -> void:
 
 	var compute_list = rd.compute_list_begin()
 
-	# Collide
+	# 1. Collide
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
 	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
 	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
 
-	# Stream
+	# 2. Stream
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
 	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
 
+	# 3. Copy V[] → 3D texture (pure GPU)
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_slice)
+	rd.compute_list_bind_uniform_set(compute_list, uset_slice, 0)
+	rd.compute_list_dispatch(compute_list, NX / 16, NY, NZ / 16)
+
 	rd.compute_list_end()
-
-	_copy_velocity_slice_to_texture()
-
 # -------------------------------------------------------------------------
 func _update_params() -> void:
 	# Pack: NX(int), NY(int), NZ(int), t(float) — all 4 bytes each = 16 bytes
@@ -181,22 +194,29 @@ func _update_params() -> void:
 	data.encode_float(12, elapsed_time)
 	rd.buffer_update(buf_params, 0, 16, data)
 
-# -------------------------------------------------------------------------
-func _copy_velocity_slice_to_texture() -> void:
-	# Read the XZ velocity slice at y = NY/2 from buf_v into the texture
-	# so the material shader can sample wind direction
-	var mid_y := NY / 2
-	var raw := rd.buffer_get_data(buf_v)
-	var floats := raw.to_float32_array()
-	var img_data := PackedByteArray()
-	img_data.resize(NX * NZ * 16) # vec4 = 4 floats = 16 bytes per pixel
+func _make_uniform_set_slice(shader: RID) -> RID:
+	var uniforms: Array[RDUniform] = []
 
-	for x in NX:
-		for z in NZ:
-			var cell_idx := (x * NY + mid_y) * NZ + z
-			var src_byte := cell_idx * 4 * 4 # 4 floats * 4 bytes
-			var dst_byte := (x * NZ + z) * 16
-			for b in 16:
-				img_data[dst_byte + b] = raw[src_byte + b]
+	var bindings = [
+		[buf_f, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
+		[buf_fprop, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
+		[buf_b, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
+		[buf_rho, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 3],
+		[buf_v, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 4],
+		[buf_params, RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 5],
+	]
+	for entry in bindings:
+		var u := RDUniform.new()
+		u.uniform_type = entry[1]
+		u.binding = entry[2]
+		u.add_id(entry[0])
+		uniforms.append(u)
 
-	rd.texture_update(shared_texture_rid, 0, img_data)
+	# Texture at binding 6
+	var tex_uniform := RDUniform.new()
+	tex_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
+	tex_uniform.binding = 6
+	tex_uniform.add_id(shared_texture_rid)
+	uniforms.append(tex_uniform)
+
+	return rd.uniform_set_create(uniforms, shader, 0)
