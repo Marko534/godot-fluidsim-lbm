@@ -5,6 +5,7 @@
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://weather/terrain/noise.tres" id="2_7n7uo"]
 [ext_resource type="PlaneMesh" uid="uid://bh0kfvdokbrsk" path="res://weather/wind/wind.tres" id="4_q6ctr"]
 [ext_resource type="PlaneMesh" uid="uid://b15cbsjkfuj2m" path="res://weather/wind/pressure.tres" id="5_q6ctr"]
+[ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://weather/wind/particles.tres" id="6_i4hyn"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
 width = 64
@@ -20,6 +21,14 @@ shader_parameter/heightmap = SubResource("NoiseTexture2D_yaehf")
 material = SubResource("ShaderMaterial_074og")
 subdivide_width = 64
 subdivide_depth = 64
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_i4hyn"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_i4hyn"]
+
+[sub_resource type="Skin" id="Skin_i4hyn"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_i4hyn"]
 
 [node name="Terrain" type="Node3D" unique_id=931775018]
 script = ExtResource("1_adq5w")
@@ -56,3 +65,16 @@ mesh = ExtResource("4_q6ctr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
 cast_shadow = 0
 mesh = ExtResource("4_q6ctr")
+
+[node name="GPUParticles3D2" type="GPUParticles3D" parent="." unique_id=1351386756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.2524476, 20.094742)
+process_material = SubResource("ParticleProcessMaterial_i4hyn")
+draw_pass_1 = SubResource("PrismMesh_i4hyn")
+draw_skin = SubResource("Skin_i4hyn")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=289502313]
+emitting = false
+amount = 100
+lifetime = 10.0
+process_material = ExtResource("6_i4hyn")
+draw_pass_1 = SubResource("CapsuleMesh_i4hyn")
