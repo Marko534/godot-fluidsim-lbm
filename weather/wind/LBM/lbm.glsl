@@ -15,6 +15,8 @@ layout (std430, binding = 2) buffer b {
   float B[];
 };
 
+layout(set = 0, binding = 3, rgba32f) uniform restrict image3D velocity_tex_3d;
+
 // Size of Domain
 
 // Pass from Godot Script

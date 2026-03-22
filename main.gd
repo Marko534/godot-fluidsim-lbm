@@ -16,8 +16,6 @@ var layout_size: int = 32
 var buf_f: RID # distribution functions
 var buf_fprop: RID # post-collision
 var buf_b: RID # boundary
-var buf_rho: RID # density
-var buf_v: RID # velocity (vec4 per cell)
 var buf_params: RID # SimParams uniform buffer
 
 # --- Pipelines ---
@@ -48,30 +46,22 @@ func _ready() -> void:
 	_create_buffers()
 	_create_output_texture()
 	_setup_pipelines()
-	#$MeshInstance3D.scale = Vector3(NX, 1, NZ)
 	_run_init()
 	initialized = true
 	
 # -------------------------------------------------------------------------
 func _create_buffers() -> void:
-	var cell_count := NX * NY * NZ
+	var cell_count  := NX * NY * NZ
 	var float_bytes := 4
 
-	# F and FPROP: one float per direction per cell
-	buf_f = rd.storage_buffer_create(cell_count * Q * float_bytes)
+	buf_f     = rd.storage_buffer_create(cell_count * Q * float_bytes)
 	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
 
-	# Boundary: one float per cell ( get from heat map from env)
 	var boundary := _create_boundary_from_noise()
 	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
-	
-	# Density and velocity
-	buf_rho = rd.storage_buffer_create(cell_count * float_bytes)
-	buf_v = rd.storage_buffer_create(cell_count * 4 * float_bytes) # vec4
 
-	# SimParams uniform buffer: NX, NY, NZ (ints) + t (float) = 16 bytes
 	buf_params = rd.uniform_buffer_create(16)
-
+	# buf_rho and buf_v are gone
 # -------------------------------------------------------------------------
 func _create_output_texture() -> void:
 	# 3D texture matching the LBM grid exactly
@@ -103,43 +93,43 @@ func _create_output_texture() -> void:
 
 # -------------------------------------------------------------------------
 func _make_uniform_set(shader: RID) -> RID:
-	# All shaders share the same buffer layout (bindings 0-5)
 	var uniforms: Array[RDUniform] = []
 
 	var bindings = [
-		[buf_f, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
-		[buf_fprop, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
-		[buf_b, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
-		[buf_rho, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 3],
-		[buf_v, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 4],
+		[buf_f,      RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
+		[buf_fprop,  RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
+		[buf_b,      RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
 		[buf_params, RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 5],
 	]
-
 	for entry in bindings:
-		var u := RDUniform.new()
-		u.uniform_type = entry[1]
-		u.binding = entry[2]
+		var u          := RDUniform.new()
+		u.uniform_type  = entry[1]
+		u.binding       = entry[2]
 		u.add_id(entry[0])
 		uniforms.append(u)
+
+	# Texture at binding 3 — all shaders need it now
+	var tex_uniform         := RDUniform.new()
+	tex_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
+	tex_uniform.binding      = 3
+	tex_uniform.add_id(shared_texture_rid)
+	uniforms.append(tex_uniform)
 
 	return rd.uniform_set_create(uniforms, shader, 0)
 
 # -------------------------------------------------------------------------
 func _setup_pipelines() -> void:
-	var init_shader := _load_shader("res://weather/wind/LBM/init.glsl")
+	var init_shader    := _load_shader("res://weather/wind/LBM/init.glsl")
 	var collide_shader := _load_shader("res://weather/wind/LBM/collide.glsl")
-	var stream_shader := _load_shader("res://weather/wind/LBM/stream.glsl")
-	var slice_shader := _load_shader("res://weather/wind/LBM/slice.glsl")
+	var stream_shader  := _load_shader("res://weather/wind/LBM/stream.glsl")
 
-	pipeline_init = rd.compute_pipeline_create(init_shader)
+	pipeline_init    = rd.compute_pipeline_create(init_shader)
 	pipeline_collide = rd.compute_pipeline_create(collide_shader)
-	pipeline_stream = rd.compute_pipeline_create(stream_shader)
-	pipeline_slice = rd.compute_pipeline_create(slice_shader)
+	pipeline_stream  = rd.compute_pipeline_create(stream_shader)
 
-	uset_init = _make_uniform_set(init_shader)
+	uset_init    = _make_uniform_set(init_shader)
 	uset_collide = _make_uniform_set(collide_shader)
-	uset_stream = _make_uniform_set(stream_shader)
-	uset_slice = _make_uniform_set_slice(slice_shader)
+	uset_stream  = _make_uniform_set(stream_shader)
 
 func _load_shader(path: String) -> RID:
 	var file: RDShaderFile = load(path)
@@ -175,11 +165,6 @@ func _process(delta: float) -> void:
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 
-	# 3. Copy V[] → 3D texture (pure GPU)
-	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_slice)
-	rd.compute_list_bind_uniform_set(compute_list, uset_slice, 0)
-	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
-
 	rd.compute_list_end()
 # -------------------------------------------------------------------------
 func _update_params() -> void:
@@ -192,33 +177,6 @@ func _update_params() -> void:
 	data.encode_float(12, elapsed_time)
 	rd.buffer_update(buf_params, 0, 16, data)
 
-func _make_uniform_set_slice(shader: RID) -> RID:
-	var uniforms: Array[RDUniform] = []
-
-	var bindings = [
-		[buf_f, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
-		[buf_fprop, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
-		[buf_b, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
-		[buf_rho, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 3],
-		[buf_v, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 4],
-		[buf_params, RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 5],
-	]
-	for entry in bindings:
-		var u := RDUniform.new()
-		u.uniform_type = entry[1]
-		u.binding = entry[2]
-		u.add_id(entry[0])
-		uniforms.append(u)
-
-	# Texture at binding 6
-	var tex_uniform := RDUniform.new()
-	tex_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
-	tex_uniform.binding = 6
-	tex_uniform.add_id(shared_texture_rid)
-	uniforms.append(tex_uniform)
-
-	return rd.uniform_set_create(uniforms, shader, 0)
-	
 func _create_boundary_from_noise() -> PackedFloat32Array:
 	var boundary := PackedFloat32Array()
 	boundary.resize(NX * NY * NZ)
