@@ -85,7 +85,10 @@ func _create_output_texture() -> void:
 	var mesh_wind := load("res://weather/wind/wind.tres") as Mesh
 	var mat_wind := mesh_wind.surface_get_material(0)
 	mat_wind.set_shader_parameter("weather", godot_texture_3d)
-
+	
+	var mat_sim := load("res://weather/wind/particles.tres") as Material
+	mat_sim.set_shader_parameter("weather", godot_texture_3d)
+	
 func _make_uniform_set(shader: RID) -> RID:
 	var uniforms: Array[RDUniform] = []
 

@@ -73,8 +73,7 @@ draw_pass_1 = SubResource("PrismMesh_i4hyn")
 draw_skin = SubResource("Skin_i4hyn")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=289502313]
-emitting = false
-amount = 100
+amount = 1000
 lifetime = 10.0
 process_material = ExtResource("6_i4hyn")
 draw_pass_1 = SubResource("CapsuleMesh_i4hyn")
