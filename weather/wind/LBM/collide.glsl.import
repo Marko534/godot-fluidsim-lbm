@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bnd3fvk7f60lo"
+path="res://.godot/imported/collide.glsl-976adf764d748261c9f9e6bf7b86286b.res"
+
+[deps]
+
+source_file="res://weather/wind/LBM/collide.glsl"
+dest_files=["res://.godot/imported/collide.glsl-976adf764d748261c9f9e6bf7b86286b.res"]
+
+[params]
+

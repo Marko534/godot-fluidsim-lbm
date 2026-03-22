@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://s6w7uof0i282"
+path="res://.godot/imported/init.glsl-ee3ceba9ebad92d5f815607d96f2724f.res"
+
+[deps]
+
+source_file="res://weather/wind/LBM/init.glsl"
+dest_files=["res://.godot/imported/init.glsl-ee3ceba9ebad92d5f815607d96f2724f.res"]
+
+[params]
+
