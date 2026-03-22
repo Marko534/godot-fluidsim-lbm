@@ -92,7 +92,7 @@ func _create_output_texture() -> void:
 	# Texture3DRD bridges the RD texture to Godot's material system
 	godot_texture_3d.texture_rd_rid = shared_texture_rid
 
-	var mat: ShaderMaterial = $MeshInstance3D.get_active_material(0)
+	var mat: ShaderMaterial = $"Terrain Visual".get_active_material(0)
 	mat.set_shader_parameter("wind_volume", godot_texture_3d)
 
 # -------------------------------------------------------------------------

@@ -17,11 +17,6 @@
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
 
-[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_w48qg"]
-map_width = 32
-map_depth = 32
-map_data = PackedFloat32Array(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
 width = 64
 height = 64
@@ -34,6 +29,16 @@ shader_parameter/heightmap = SubResource("NoiseTexture2D_yaehf")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_cegan"]
 material = SubResource("ShaderMaterial_074og")
+subdivide_width = 64
+subdivide_depth = 64
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
+render_priority = 0
+shader = ExtResource("2_0xm2m")
+shader_parameter/pressure_scale = 50.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
+material = SubResource("ShaderMaterial_h2yge")
 subdivide_width = 64
 subdivide_depth = 64
 
@@ -104,19 +109,6 @@ shader_parameter/wave_dir3 = Vector2(0.7, 0.7)
 shader_parameter/wave_dir4 = Vector2(-0.3, 0.8)
 shader_parameter/noise = SubResource("NoiseTexture2D_272bh")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
-render_priority = 0
-shader = ExtResource("2_0xm2m")
-shader_parameter/height_scale = 0.5
-shader_parameter/NX = 64
-shader_parameter/NY = 32
-shader_parameter/NZ = 64
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
-material = SubResource("ShaderMaterial_h2yge")
-subdivide_width = 64
-subdivide_depth = 64
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
 render_priority = 0
 shader = ExtResource("9_ycdy4")
@@ -140,16 +132,19 @@ shader_parameter/sway_phase_len = 8.0
 script = ExtResource("1_vivmo")
 noise = ExtResource("3_2cqfq")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=76560686]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5105944, 1.8899194, 0)
-
-[node name="Terrain" type="CollisionShape3D" parent="StaticBody3D" unique_id=843316789]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26490843, 0)
-shape = SubResource("HeightMapShape3D_w48qg")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1054310523]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.622372, -2.7898796, -4.161523)
+[node name="Terrain" type="MeshInstance3D" parent="." unique_id=1054310523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -1, -4)
 mesh = SubResource("PlaneMesh_cegan")
+
+[node name="Terrain Visual2" type="MeshInstance3D" parent="." unique_id=1362207321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -1, -7)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_h2yge")
+
+[node name="Terrain Visual" type="MeshInstance3D" parent="." unique_id=1966157195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, -1, -4)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_h2yge")
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 
@@ -186,7 +181,7 @@ visible = false
 [node name="WaterSlow" type="MeshInstance3D" parent="." unique_id=1056650172]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -2, -39.437214)
 mesh = SubResource("PlaneMesh_7mycd")
-skeleton = NodePath("../MeshInstance3D")
+skeleton = NodePath("../Terrain Visual")
 
 [node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
 transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, 55.637726, -0.8397317, -2.9681067)
@@ -194,12 +189,8 @@ transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, 55.637726, -0.8397317, -2.9
 [node name="WaterMe" type="MeshInstance3D" parent="." unique_id=776782405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.345232, -1, 19.785)
 mesh = SubResource("PlaneMesh_lquwl")
-skeleton = NodePath("../MeshInstance3D")
+skeleton = NodePath("../Terrain Visual")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.230488, -0.7592006, -7.713776)
-mesh = SubResource("PlaneMesh_h2yge")
 
 [node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
