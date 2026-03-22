@@ -28,6 +28,7 @@ void main(){
   }
 
   RHO[ind] = getRho(ind);
-  V[ind] = vec4(getV(ind)/RHO[ind], 1.0);
+  float _rho = getRho(ind);
+  V[ind] = vec4(getV(ind)/_rho, _rho);
 
 }

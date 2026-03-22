@@ -18,5 +18,5 @@ void vertex() {
 }
 
 void fragment() {
-    ALBEDO = wind;
+    ALBEDO = wind.xyz;
 }

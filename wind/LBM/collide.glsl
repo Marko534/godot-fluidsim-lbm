@@ -29,7 +29,7 @@ void main(){
 
 
   RHO[ind] = _rho;
-  V[ind] = vec4(_v, 0.0);
+  V[ind] = vec4(_v, _rho);
 
   // Accelerate Downwards (Gravity)!
 //  for(int q = 0; q < Q; q++)

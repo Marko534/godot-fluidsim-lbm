@@ -3,7 +3,7 @@
 [ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://main.gd" id="1_vivmo"]
-[ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
+[ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://wind/wind.gdshader" id="2_0xm2m"]
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://terrain/noise.tres" id="3_2cqfq"]
 [ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://terrain/tarrain.gdshader" id="3_yaehf"]

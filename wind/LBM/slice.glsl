@@ -3,6 +3,8 @@
 layout(local_size_x = 16, local_size_y = 1, local_size_z = 16) in;
 #include "lbm.glsl"
 
+layout(set = 0, binding = 6, rgba32f) uniform restrict writeonly image3D velocity_tex_3d;
+
 layout(std430, binding = 4) buffer v { vec4 V[]; };
 
 void main(){
