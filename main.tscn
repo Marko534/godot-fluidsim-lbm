@@ -128,26 +128,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.694844, 1.1090586, 0)
 transform = Transform3D(0.8609017, 0.094065286, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
 shadow_enabled = true
 
-[node name="WaterSlow" type="MeshInstance3D" parent="." unique_id=1056650172]
+[node name="Waters" type="Node3D" parent="." unique_id=1781554358]
+visible = false
+
+[node name="WaterSlow" type="MeshInstance3D" parent="Waters" unique_id=1056650172]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -2, -39.437214)
 mesh = SubResource("PlaneMesh_7mycd")
 skeleton = NodePath("../Terrain/Terrain Visual")
 
-[node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
+[node name="WaterFast" parent="Waters" unique_id=88638164 instance=ExtResource("4_1bvp3")]
 transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, 55.637726, -0.8397317, -2.9681067)
+skeleton = NodePath("../..")
 
-[node name="WaterMe" type="MeshInstance3D" parent="." unique_id=776782405]
+[node name="WaterMe" type="MeshInstance3D" parent="Waters" unique_id=776782405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.345232, -1, 19.785)
 mesh = SubResource("PlaneMesh_lquwl")
 skeleton = NodePath("../Terrain/Terrain Visual")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
-[node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
+[node name="Trees" type="Node3D" parent="." unique_id=2014823359]
+visible = false
+
+[node name="tree" parent="Trees" unique_id=1074596166 instance=ExtResource("7_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
 
-[node name="Tree" type="MeshInstance3D" parent="." unique_id=2119363092]
+[node name="Tree" type="MeshInstance3D" parent="Trees" unique_id=2119363092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
 visible = false
 mesh = ExtResource("8_5vw27")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")

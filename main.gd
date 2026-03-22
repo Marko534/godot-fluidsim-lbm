@@ -2,67 +2,62 @@ extends Node3D
 
 @export var noise: FastNoiseLite
 
-# --- LBM Grid Dimensions ---
+# LBM Grid Dimensions
 const NX: int = 64
 const NY: int = 32
 const NZ: int = 64
 const Q: int = 19
 
-# --- Rendering ---
+# Rendering
 var rd: RenderingDevice
 var layout_size: int = 32
 
-# --- Buffers ---
+# Buffers
 var buf_f: RID # distribution functions
 var buf_fprop: RID # post-collision
 var buf_b: RID # boundary
 var buf_params: RID # SimParams uniform buffer
 
-# --- Pipelines ---
+# Texture for V and RHO
+var shared_texture_rid: RID
+var godot_texture_3d: Texture3DRD = Texture3DRD.new()
+
+# Pipelines
 var pipeline_init: RID
 var pipeline_collide: RID
 var pipeline_stream: RID
 
-# --- Uniform Sets ---
+# Uniform Sets
 var uset_init: RID
 var uset_collide: RID
 var uset_stream: RID
 
-# --- Output texture for material ---
-var shared_texture_rid: RID
-var godot_texture_3d: Texture3DRD = Texture3DRD.new()
-
-# --- State ---
+# State
 var elapsed_time: float = 0.0
-var initialized: bool = false
 
-# --- Slice ---
+# Slice
 var pipeline_slice: RID
 var uset_slice: RID
 
-# -------------------------------------------------------------------------
 func _ready() -> void:
 	rd = RenderingServer.get_rendering_device()
 	_create_buffers()
 	_create_output_texture()
 	_setup_pipelines()
 	_run_init()
-	initialized = true
 	
-# -------------------------------------------------------------------------
 func _create_buffers() -> void:
-	var cell_count  := NX * NY * NZ
+	var cell_count := NX * NY * NZ
 	var float_bytes := 4
 
-	buf_f     = rd.storage_buffer_create(cell_count * Q * float_bytes)
+	buf_f = rd.storage_buffer_create(cell_count * Q * float_bytes)
 	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
 
 	var boundary := _create_boundary_from_noise()
 	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
 
 	buf_params = rd.uniform_buffer_create(16)
-	# buf_rho and buf_v are gone
-# -------------------------------------------------------------------------
+
 func _create_output_texture() -> void:
 	# 3D texture matching the LBM grid exactly
 	var tf := RDTextureFormat.new()
@@ -91,52 +86,48 @@ func _create_output_texture() -> void:
 	var mat_wind := mesh_wind.surface_get_material(0)
 	mat_wind.set_shader_parameter("weather", godot_texture_3d)
 
-# -------------------------------------------------------------------------
 func _make_uniform_set(shader: RID) -> RID:
 	var uniforms: Array[RDUniform] = []
 
 	var bindings = [
-		[buf_f,      RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
-		[buf_fprop,  RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
-		[buf_b,      RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
+		[buf_f, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 0],
+		[buf_fprop, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 1],
+		[buf_b, RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 2],
 		[buf_params, RenderingDevice.UNIFORM_TYPE_UNIFORM_BUFFER, 5],
 	]
 	for entry in bindings:
-		var u          := RDUniform.new()
-		u.uniform_type  = entry[1]
-		u.binding       = entry[2]
+		var u := RDUniform.new()
+		u.uniform_type = entry[1]
+		u.binding = entry[2]
 		u.add_id(entry[0])
 		uniforms.append(u)
 
-	# Texture at binding 3 — all shaders need it now
-	var tex_uniform         := RDUniform.new()
+	var tex_uniform := RDUniform.new()
 	tex_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
-	tex_uniform.binding      = 3
+	tex_uniform.binding = 3
 	tex_uniform.add_id(shared_texture_rid)
 	uniforms.append(tex_uniform)
 
 	return rd.uniform_set_create(uniforms, shader, 0)
 
-# -------------------------------------------------------------------------
 func _setup_pipelines() -> void:
-	var init_shader    := _load_shader("res://weather/wind/LBM/init.glsl")
+	var init_shader := _load_shader("res://weather/wind/LBM/init.glsl")
 	var collide_shader := _load_shader("res://weather/wind/LBM/collide.glsl")
-	var stream_shader  := _load_shader("res://weather/wind/LBM/stream.glsl")
+	var stream_shader := _load_shader("res://weather/wind/LBM/stream.glsl")
 
-	pipeline_init    = rd.compute_pipeline_create(init_shader)
+	pipeline_init = rd.compute_pipeline_create(init_shader)
 	pipeline_collide = rd.compute_pipeline_create(collide_shader)
-	pipeline_stream  = rd.compute_pipeline_create(stream_shader)
+	pipeline_stream = rd.compute_pipeline_create(stream_shader)
 
-	uset_init    = _make_uniform_set(init_shader)
+	uset_init = _make_uniform_set(init_shader)
 	uset_collide = _make_uniform_set(collide_shader)
-	uset_stream  = _make_uniform_set(stream_shader)
+	uset_stream = _make_uniform_set(stream_shader)
 
 func _load_shader(path: String) -> RID:
 	var file: RDShaderFile = load(path)
 	var spirv: RDShaderSPIRV = file.get_spirv()
 	return rd.shader_create_from_spirv(spirv)
 
-# -------------------------------------------------------------------------
 func _run_init() -> void:
 	_update_params()
 	var compute_list = rd.compute_list_begin()
@@ -145,11 +136,7 @@ func _run_init() -> void:
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 	rd.compute_list_end()
 
-# -------------------------------------------------------------------------
 func _process(delta: float) -> void:
-	if not initialized:
-		return
-
 	elapsed_time += delta
 	_update_params()
 
@@ -166,7 +153,7 @@ func _process(delta: float) -> void:
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 
 	rd.compute_list_end()
-# -------------------------------------------------------------------------
+
 func _update_params() -> void:
 	# Pack: NX(int), NY(int), NZ(int), t(float) — all 4 bytes each = 16 bytes
 	var data := PackedByteArray()
@@ -187,13 +174,13 @@ func _create_boundary_from_noise() -> PackedFloat32Array:
 	for x in NX:
 		for z in NZ:
 			# Sample noise pixel — red channel is height 0..1
-			var height_norm  := img.get_pixel(x, z).r
+			var height_norm := img.get_pixel(x, z).r
 			# Map 0..1 height to 0..NY cell height
-			var height_cell  := int(height_norm * NY)
+			var height_cell := int(height_norm * NY)
 
 			for y in NY:
-				var i        := (x * NY + y) * NZ + z
+				var i := (x * NY + y) * NZ + z
 				# Solid below height, fluid above
-				boundary[i]  = 1.0 if y < height_cell else 0.0
+				boundary[i] = 1.0 if y < height_cell else 0.0
 
 	return boundary
