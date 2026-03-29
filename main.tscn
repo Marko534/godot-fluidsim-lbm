@@ -1,14 +1,13 @@
 [gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
-[ext_resource type="Environment" uid="uid://c2o4rk4p50u2" path="res://main2.tres" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://main.gd" id="1_vivmo"]
-[ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://shader/first_shader.gdshader" id="2_0xm2m"]
+[ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://weather/terrain/tarrain.gdshader" id="1_w48qg"]
+[ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://weather/terrain/noise.tres" id="2_vivmo"]
 [ext_resource type="Shader" uid="uid://bpucihlrveerc" path="res://shader/water_hot_shader.gdshader" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://xpwi1i7q5ybt" path="res://weather/weather.tscn" id="3_vivmo"]
 [ext_resource type="PackedScene" uid="uid://jbdyxa0pv5kk" path="res://water.tscn" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://cgofsg8cxb70l" path="res://shader/wave_shader.gdshader" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_272bh"]
-[ext_resource type="FastNoiseLite" uid="uid://dymtum4fjqlab" path="res://new_fast_noise_lite.tres" id="7_w48qg"]
 [ext_resource type="ArrayMesh" uid="uid://mbiagkcmkvnc" path="res://tree/tree.obj" id="8_5vw27"]
 [ext_resource type="Shader" uid="uid://bwh0knkk2jk0c" path="res://tree/leaves.gdshader" id="9_kek77"]
 [ext_resource type="Shader" uid="uid://bylcbr8pu4x7c" path="res://tree/trunk.gdshader" id="9_ycdy4"]
@@ -16,12 +15,25 @@
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
 
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cqfq"]
+width = 64
+height = 64
+noise = ExtResource("2_vivmo")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_074og"]
+render_priority = 0
+shader = ExtResource("1_w48qg")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_2cqfq")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yaehf"]
+material = SubResource("ShaderMaterial_074og")
+subdivide_width = 64
+subdivide_depth = 64
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 size = Vector2(30, 100)
-subdivide_width = 64
-subdivide_depth = 64
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(5, 5, 5)
@@ -85,27 +97,6 @@ shader_parameter/wave_dir3 = Vector2(0.7, 0.7)
 shader_parameter/wave_dir4 = Vector2(-0.3, 0.8)
 shader_parameter/noise = SubResource("NoiseTexture2D_272bh")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xm2m"]
-noise = ExtResource("7_w48qg")
-seamless = true
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
-noise = ExtResource("7_w48qg")
-seamless = true
-as_normal_map = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_h2yge"]
-render_priority = 0
-shader = ExtResource("2_0xm2m")
-shader_parameter/height_scale = 0.5
-shader_parameter/noise = SubResource("NoiseTexture2D_0xm2m")
-shader_parameter/normalmap = SubResource("NoiseTexture2D_1bvp3")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
-material = SubResource("ShaderMaterial_h2yge")
-subdivide_width = 32
-subdivide_depth = 32
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
 render_priority = 0
 shader = ExtResource("9_ycdy4")
@@ -126,7 +117,14 @@ shader_parameter/sway_strength = 0.2
 shader_parameter/sway_phase_len = 8.0
 
 [node name="Main" type="Node3D" unique_id=1201869165]
-script = ExtResource("1_vivmo")
+
+[node name="Terrain2" type="MeshInstance3D" parent="." unique_id=2064789127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_yaehf")
+
+[node name="Terrain" parent="." unique_id=931775018 instance=ExtResource("3_vivmo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07, -0.5, 0)
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 
@@ -134,6 +132,7 @@ script = ExtResource("1_vivmo")
 shape = SubResource("WorldBoundaryShape3D_7dm0k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=954571433]
+visible = false
 mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
@@ -146,44 +145,39 @@ shape = SubResource("BoxShape3D_ig7tw")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.694844, 1.1090586, 0)
 
-[node name="Env" type="Node3D" parent="." unique_id=44473096]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="Env" unique_id=1915966006]
-environment = ExtResource("1_0xm2m")
-
-[node name="Sun" type="DirectionalLight3D" parent="Env" unique_id=385630530]
-transform = Transform3D(0.8609017, 0.09406531, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=385630530]
+transform = Transform3D(0.8609017, 0.094065286, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Moon" type="Node3D" parent="Env" unique_id=1463443792]
+[node name="Waters" type="Node3D" parent="." unique_id=1781554358]
 visible = false
 
-[node name="WaterSlow" type="MeshInstance3D" parent="." unique_id=1056650172]
+[node name="WaterSlow" type="MeshInstance3D" parent="Waters" unique_id=1056650172]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -2, -39.437214)
 mesh = SubResource("PlaneMesh_7mycd")
-skeleton = NodePath("../MeshInstance3D")
+skeleton = NodePath("../Terrain/Terrain Visual")
 
-[node name="WaterFast" parent="." unique_id=88638164 instance=ExtResource("4_1bvp3")]
-transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, -40, -0.8397317, -2.9681067)
+[node name="WaterFast" parent="Waters" unique_id=88638164 instance=ExtResource("4_1bvp3")]
+transform = Transform3D(25, 0, 0, 0, 1, 0, 0, 0, 10, 55.637726, -0.8397317, -2.9681067)
+skeleton = NodePath("../..")
 
-[node name="WaterMe" type="MeshInstance3D" parent="." unique_id=776782405]
+[node name="WaterMe" type="MeshInstance3D" parent="Waters" unique_id=776782405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.345232, -1, 19.785)
 mesh = SubResource("PlaneMesh_lquwl")
-skeleton = NodePath("../MeshInstance3D")
+skeleton = NodePath("../Terrain/Terrain Visual")
 surface_material_override/0 = SubResource("ShaderMaterial_272bh")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1966157195]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.4217615, 0.5, -7.713776)
-mesh = SubResource("PlaneMesh_h2yge")
+[node name="Trees" type="Node3D" parent="." unique_id=2014823359]
+visible = false
 
-[node name="tree" parent="." unique_id=1074596166 instance=ExtResource("7_272bh")]
+[node name="tree" parent="Trees" unique_id=1074596166 instance=ExtResource("7_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
 
-[node name="Tree" type="MeshInstance3D" parent="." unique_id=2119363092]
+[node name="Tree" type="MeshInstance3D" parent="Trees" unique_id=2119363092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
 visible = false
 mesh = ExtResource("8_5vw27")
+skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")

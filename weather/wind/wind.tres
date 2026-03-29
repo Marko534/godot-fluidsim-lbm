@@ -1,0 +1,13 @@
+[gd_resource type="PlaneMesh" format=3 uid="uid://bh0kfvdokbrsk"]
+
+[ext_resource type="Shader" uid="uid://duahgkdee06mq" path="res://weather/wind/wind.gdshader" id="1_aqvmx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aqvmx"]
+render_priority = 0
+shader = ExtResource("1_aqvmx")
+shader_parameter/pressure_scale = 50.0
+
+[resource]
+material = SubResource("ShaderMaterial_aqvmx")
+subdivide_width = 64
+subdivide_depth = 64

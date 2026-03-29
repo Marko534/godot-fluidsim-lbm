@@ -1,0 +1,35 @@
+shader_type particles;
+
+uniform sampler3D weather : hint_default_black, repeat_disable;
+uniform float wind_strength = 1.0;
+
+float rand(float seed) {
+    return fract(sin(seed) * 43758.5453);
+}
+
+void start() {
+    TRANSFORM[3].x = rand(float(INDEX) + TIME) * 2.0 - 1.0;        // -1..1
+    TRANSFORM[3].y = rand(float(INDEX) + TIME + 1.0);         // -0.5..0.5
+    TRANSFORM[3].z = rand(float(INDEX) + TIME + 2.0) * 2.0 - 1.0;  // -1..1
+    VELOCITY       = vec3(0.0);
+    ACTIVE         = true;
+}
+
+void process() {
+    vec3 p = TRANSFORM[3].xyz;
+    if(p.x < -1.0 || p.x > 1.0
+    || p.y < 0.0 || p.y > 0.5
+    || p.z < -1.0 || p.z > 1.0){
+        ACTIVE = false;
+    }
+	
+	vec3 uvw          = vec3(
+        (TRANSFORM[3].x + 1.0) / 2.0,   // remap -1..1 to 0..1
+        (TRANSFORM[3].y + 0.5),          // remap -0.5..0.5 to 0..1
+        (TRANSFORM[3].z + 1.0) / 2.0    // remap -1..1 to 0..1
+    );
+    vec3 wind         = texture(weather, uvw).xyz;
+    VELOCITY          = wind * wind_strength;
+    TRANSFORM[3].xyz += VELOCITY * DELTA;
+	
+}
