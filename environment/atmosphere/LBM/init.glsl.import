@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://s6w7uof0i282"
+path="res://.godot/imported/init.glsl-f18cfe3765be0c606af66c91ca7c557d.res"
+
+[deps]
+
+source_file="res://environment/atmosphere/LBM/init.glsl"
+dest_files=["res://.godot/imported/init.glsl-f18cfe3765be0c606af66c91ca7c557d.res"]
+
+[params]
+
