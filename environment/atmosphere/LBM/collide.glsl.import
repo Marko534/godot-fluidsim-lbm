@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bnd3fvk7f60lo"
+path="res://.godot/imported/collide.glsl-7b9cc9edc4e6f7724b507b455028455c.res"
+
+[deps]
+
+source_file="res://environment/atmosphere/LBM/collide.glsl"
+dest_files=["res://.godot/imported/collide.glsl-7b9cc9edc4e6f7724b507b455028455c.res"]
+
+[params]
+
