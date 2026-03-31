@@ -78,6 +78,7 @@ mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Box" unique_id=265799742]
 shape = SubResource("BoxShape3D_ig7tw")

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://xmfrbfa73hvl"
 path.s3tc="res://.godot/imported/Arbres_Cap_yggdrassil_D_02.png-59a0c24650cd26d1a8bf121407be3924.s3tc.ctex"
+path.etc2="res://.godot/imported/Arbres_Cap_yggdrassil_D_02.png-59a0c24650cd26d1a8bf121407be3924.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://tree/source/yggrassil_02/Arbres_Cap_yggdrassil_D_02.png"
-dest_files=["res://.godot/imported/Arbres_Cap_yggdrassil_D_02.png-59a0c24650cd26d1a8bf121407be3924.s3tc.ctex"]
+dest_files=["res://.godot/imported/Arbres_Cap_yggdrassil_D_02.png-59a0c24650cd26d1a8bf121407be3924.s3tc.ctex", "res://.godot/imported/Arbres_Cap_yggdrassil_D_02.png-59a0c24650cd26d1a8bf121407be3924.etc2.ctex"]
 
 [params]
 
