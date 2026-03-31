@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://e4u5g547mg57"
 path.s3tc="res://.godot/imported/Red_Maple_Leaves_Hero_Fall_2.png-15eaf4736abbc45b9eaeb5e5b1f43599.s3tc.ctex"
+path.etc2="res://.godot/imported/Red_Maple_Leaves_Hero_Fall_2.png-15eaf4736abbc45b9eaeb5e5b1f43599.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://tree/textures/Red_Maple_Leaves_Hero_Fall_2.png"
-dest_files=["res://.godot/imported/Red_Maple_Leaves_Hero_Fall_2.png-15eaf4736abbc45b9eaeb5e5b1f43599.s3tc.ctex"]
+dest_files=["res://.godot/imported/Red_Maple_Leaves_Hero_Fall_2.png-15eaf4736abbc45b9eaeb5e5b1f43599.s3tc.ctex", "res://.godot/imported/Red_Maple_Leaves_Hero_Fall_2.png-15eaf4736abbc45b9eaeb5e5b1f43599.etc2.ctex"]
 
 [params]
 
