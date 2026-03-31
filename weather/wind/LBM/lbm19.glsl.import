@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cqkpesdwau4e5"
+path="res://.godot/imported/lbm19.glsl-f6b738795739d54f9b8baf821fee92a6.res"
+
+[deps]
+
+source_file="res://weather/wind/LBM/lbm19.glsl"
+dest_files=["res://.godot/imported/lbm19.glsl-f6b738795739d54f9b8baf821fee92a6.res"]
+
+[params]
+

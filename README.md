@@ -117,11 +117,11 @@ mat.set_shader_parameter("weather", godot_texture_3d)
 uniform sampler3D weather : hint_default_black, repeat_disable;
 
 void vertex() {
-    vec3 uvw    = vec3(UV.x, 0.5, UV.y);       // sample at mid-height
-    vec4 sample = texture(weather, uvw);
-    vec3 wind   = sample.xyz;                   // velocity
-    float rho   = sample.w;                     // density/pressure
-    VERTEX.y   += wind.y * height_scale;
+	vec3 uvw    = vec3(UV.x, 0.5, UV.y);       // sample at mid-height
+	vec4 sample = texture(weather, uvw);
+	vec3 wind   = sample.xyz;                   // velocity
+	float rho   = sample.w;                     // density/pressure
+	VERTEX.y   += wind.y * height_scale;
 }
 ```
 
@@ -133,15 +133,15 @@ void vertex() {
 uniform sampler3D weather : hint_default_black, repeat_disable;
 
 void process() {
-    // Map world position to 0..1 UVW
-    vec3 uvw  = vec3(
-        (TRANSFORM[3].x + 1.0) / 2.0,
-        (TRANSFORM[3].y + 0.5),
-        (TRANSFORM[3].z + 1.0) / 2.0
-    );
-    vec3 wind         = texture(weather, uvw).xyz;
-    VELOCITY          = wind * wind_strength;
-    TRANSFORM[3].xyz += VELOCITY * DELTA;
+	// Map world position to 0..1 UVW
+	vec3 uvw  = vec3(
+		(TRANSFORM[3].x + 1.0) / 2.0,
+		(TRANSFORM[3].y + 0.5),
+		(TRANSFORM[3].z + 1.0) / 2.0
+	);
+	vec3 wind         = texture(weather, uvw).xyz;
+	VELOCITY          = wind * wind_strength;
+	TRANSFORM[3].xyz += VELOCITY * DELTA;
 }
 ```
 

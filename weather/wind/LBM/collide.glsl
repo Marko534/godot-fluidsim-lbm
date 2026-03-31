@@ -4,7 +4,7 @@
 
 layout(local_size_x = 32, local_size_y = 1, local_size_z = 32) in;
 
-#include "lbm.glsl"
+#include "lbm15.glsl"
 
 const float tau = 0.56;
 const float dt  = 1.0;

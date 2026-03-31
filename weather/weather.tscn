@@ -63,6 +63,7 @@ cast_shadow = 0
 mesh = ExtResource("4_q6ctr")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=289502313]
+visible = false
 cast_shadow = 0
 amount = 5000
 lifetime = 10.0
