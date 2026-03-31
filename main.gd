@@ -6,7 +6,8 @@ extends Node3D
 const NX: int = 64
 const NY: int = 32
 const NZ: int = 64
-const Q: int = 19
+const Q: int = 15
+#const Q: int = 19
 
 # Rendering
 var rd: RenderingDevice
