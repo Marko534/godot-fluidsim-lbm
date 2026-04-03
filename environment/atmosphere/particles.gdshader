@@ -11,48 +11,98 @@ float rand(float seed) {
 }
 
 void start() {
-    TRANSFORM[3].x = rand(float(INDEX) + TIME) * 2.0 - 1.0;
-    TRANSFORM[3].y = rand(float(INDEX) + TIME + 1.0);
-    TRANSFORM[3].z = rand(float(INDEX) + TIME + 2.0) * 2.0 - 1.0;
-    VELOCITY       = vec3(0.0);
-    ACTIVE         = true;
+    // Extract box size from EMISSION_TRANSFORM (scale of each axis)
+    vec3 box_size = vec3(
+        length(EMISSION_TRANSFORM[0].xyz),
+        length(EMISSION_TRANSFORM[1].xyz),
+        length(EMISSION_TRANSFORM[2].xyz)
+    );
+
+    // Random position in LOCAL emitter space
+    vec3 local_pos = vec3(
+        (rand(float(INDEX) + TIME) * 2.0 - 1.0) * box_size.x,
+        rand(float(INDEX) + TIME +1.0) * box_size.y,
+        (rand(float(INDEX) + TIME + 2.0) * 2.0 - 1.0) * box_size.z
+    );
+
+    // Convert to world space using EMISSION_TRANSFORM
+    TRANSFORM[3].xyz = (EMISSION_TRANSFORM * vec4(local_pos, 1.0)).xyz;
+
+    VELOCITY = vec3(0.0);
+    ACTIVE = true;
 }
 
+////////////////////////////////////////////////////////////
+// PROCESS: Move, sample wind, scale, rotate
+////////////////////////////////////////////////////////////
 void process() {
-    vec3 p = TRANSFORM[3].xyz;
-    if(p.x < -1.0 || p.x > 1.0
-    || p.y < 0.0  || p.y > 0.5
-    || p.z < -1.0 || p.z > 1.0){
+    // Recompute box size
+    vec3 box_size = vec3(
+        length(EMISSION_TRANSFORM[0].xyz),
+        length(EMISSION_TRANSFORM[1].xyz),
+        length(EMISSION_TRANSFORM[2].xyz)
+    );
+
+    // Convert particle position -> LOCAL emitter space
+    mat4 inv_emission = inverse(EMISSION_TRANSFORM);
+    vec3 local_p = (inv_emission * vec4(TRANSFORM[3].xyz, 1.0)).xyz;
+
+    ////////////////////////////////////////////////////////////
+    // Kill particles outside box
+    ////////////////////////////////////////////////////////////
+    if(local_p.x < -box_size.x || local_p.x > box_size.x ||
+       local_p.y < 0.0         || local_p.y > box_size.y ||
+       local_p.z < -box_size.z || local_p.z > box_size.z) {
         ACTIVE = false;
+        //return;
     }
 
-    vec3 uvw  = vec3(
-        (TRANSFORM[3].x + 1.0) / 2.0,
-        (TRANSFORM[3].y + 0.5),
-        (TRANSFORM[3].z + 1.0) / 2.0
+    ////////////////////////////////////////////////////////////
+    // Sample wind texture (UVW in 0–1)
+    ////////////////////////////////////////////////////////////
+    vec3 uvw = vec3(
+        (local_p.x + box_size.x) / (box_size.x * 2.0),
+        local_p.y / box_size.y,
+        (local_p.z + box_size.z) / (box_size.z * 2.0)
     );
-    vec3 wind         = texture(weather, uvw).xyz;
-    float wind_speed  = length(wind);
-    VELOCITY          = wind * wind_strength;
-    TRANSFORM[3].xyz += VELOCITY * DELTA;
 
-    // Rotate arrow to point in wind direction
-    if(wind_speed > 0.0001){
-        vec3 up      = normalize(wind);
+    vec3 wind = texture(weather, uvw).xyz;
+    float wind_speed = length(wind);
+
+    ////////////////////////////////////////////////////////////
+    // Movement
+    ////////////////////////////////////////////////////////////
+    VELOCITY = wind * wind_strength;
+    TRANSFORM[3].xyz += VELOCITY * DELTA;
+	COLOR = vec4(VELOCITY, 1.0);
+
+    ////////////////////////////////////////////////////////////
+    // Rotation + Scaling
+    ////////////////////////////////////////////////////////////
+    if(wind_speed > 0.0001) {
+        vec3 up = normalize(wind);
+
         vec3 forward = vec3(0.0, 0.0, 1.0);
         if(abs(dot(up, forward)) > 0.999)
-            forward  = vec3(1.0, 0.0, 0.0);
-        vec3 right   = normalize(cross(up, forward));
-        forward      = normalize(cross(right, up));
-        
-        // Base scale from wind speed
-        float base_scale = mix(min_scale, max_scale, clamp(wind_speed, 0.0, 1.0));
-        
-        // Stretch more in wind direction (Y axis)
+            forward = vec3(1.0, 0.0, 0.0);
+
+        vec3 right = normalize(cross(up, forward));
+        forward = normalize(cross(right, up));
+
+        // Normalize wind speed influence (adjust if needed)
+        float t = clamp(wind_speed, 0.0, 1.0);
+
+        // Base scale
+        float base_scale = mix(min_scale, max_scale, t);
+
+        // Stretch along wind direction
         float stretch = 1.0 + wind_speed * stretch_factor;
-        
-        TRANSFORM[0].xyz = right * base_scale;           // X axis (perpendicular)
-        TRANSFORM[1].xyz = up * base_scale * stretch;    // Y axis (wind direction)
-        TRANSFORM[2].xyz = forward * base_scale;         // Z axis (perpendicular)
-    }
+
+        // Apply rotation + non-uniform scaling
+        TRANSFORM[0].xyz = right * base_scale;
+        TRANSFORM[1].xyz = up * base_scale * stretch;
+        TRANSFORM[2].xyz = forward * base_scale;
+    } else{
+        ACTIVE = false;
+	}
 }

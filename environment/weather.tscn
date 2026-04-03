@@ -5,8 +5,6 @@
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="2_7n7uo"]
 [ext_resource type="PlaneMesh" uid="uid://bh0kfvdokbrsk" path="res://environment/atmosphere/wind.tres" id="4_q6ctr"]
 [ext_resource type="PlaneMesh" uid="uid://b15cbsjkfuj2m" path="res://environment/atmosphere/pressure.tres" id="5_q6ctr"]
-[ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="6_i4hyn"]
-[ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="7_blucx"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
 width = 64
@@ -58,10 +56,3 @@ mesh = ExtResource("4_q6ctr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
 cast_shadow = 0
 mesh = ExtResource("4_q6ctr")
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=289502313]
-cast_shadow = 0
-amount = 5000
-lifetime = 10.0
-process_material = ExtResource("6_i4hyn")
-draw_pass_1 = ExtResource("7_blucx")

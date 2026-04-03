@@ -1,4 +1,5 @@
 shader_type spatial;
+render_mode unshaded;
 
 uniform sampler3D weather;
 //uniform sampler3D wind_volume : hint_default_black, repeat_disable;

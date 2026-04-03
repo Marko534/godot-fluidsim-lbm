@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
 [ext_resource type="PackedScene" uid="uid://b51vera1iotqm" path="res://arrow.blend" id="12_dg77c"]
+[ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="12_ycdy4"]
+[ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="13_w48qg"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cqfq"]
 width = 64
@@ -28,9 +30,21 @@ material = SubResource("ShaderMaterial_074og")
 subdivide_width = 64
 subdivide_depth = 64
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vivmo"]
+shading_mode = 0
+specular_mode = 2
+disable_ambient_light = true
+disable_fog = true
+disable_specular_occlusion = true
+vertex_color_use_as_albedo = true
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
+albedo_color = Color(1, 0.3, 0.3, 1)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_w48qg")
 size = Vector2(30, 100)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
@@ -58,11 +72,23 @@ shader_parameter/sway_speed = 5.0
 shader_parameter/sway_strength = 0.2
 shader_parameter/sway_phase_len = 8.0
 
+[sub_resource type="Environment" id="Environment_w48qg"]
+background_mode = 1
+
 [node name="Main" type="Node3D" unique_id=1201869165]
 
-[node name="Terrain2" type="MeshInstance3D" parent="." unique_id=2064789127]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="Visual" type="MeshInstance3D" parent="." unique_id=2064789127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.212, -0.188, -0.019)
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_yaehf")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=115228861]
+material_override = SubResource("StandardMaterial3D_vivmo")
+cast_shadow = 0
+amount = 10000
+lifetime = 10.0
+process_material = ExtResource("12_ycdy4")
+draw_pass_1 = ExtResource("13_w48qg")
 
 [node name="Terrain" parent="." unique_id=931775018 instance=ExtResource("3_vivmo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07, -0.5, 0)
@@ -87,10 +113,7 @@ shape = SubResource("BoxShape3D_ig7tw")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
-
-[node name="Sun" type="DirectionalLight3D" parent="." unique_id=385630530]
-transform = Transform3D(0.8609017, 0.094065286, 0.5, -0.46854317, 0.5295917, 0.70710677, -0.19828168, -0.843021, 0.5, 0, 0, 0)
-shadow_enabled = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8405838)
 
 [node name="Trees" type="Node3D" parent="." unique_id=2014823359]
 visible = false
@@ -108,3 +131,6 @@ surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
 
 [node name="arrow" parent="." unique_id=1635935480 instance=ExtResource("12_dg77c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117319584, 2.7995367, -4.0919957)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577890627]
+environment = SubResource("Environment_w48qg")
