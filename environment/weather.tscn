@@ -6,6 +6,7 @@
 [ext_resource type="PlaneMesh" uid="uid://bh0kfvdokbrsk" path="res://environment/atmosphere/wind.tres" id="4_q6ctr"]
 [ext_resource type="PlaneMesh" uid="uid://b15cbsjkfuj2m" path="res://environment/atmosphere/pressure.tres" id="5_q6ctr"]
 [ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="6_i4hyn"]
+[ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="7_blucx"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
 width = 64
@@ -21,10 +22,6 @@ shader_parameter/heightmap = SubResource("NoiseTexture2D_yaehf")
 material = SubResource("ShaderMaterial_i4hyn")
 subdivide_width = 64
 subdivide_depth = 64
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_i4hyn"]
-radius = 0.005
-height = 0.02
 
 [node name="Terrain" type="Node3D" unique_id=931775018]
 script = ExtResource("1_adq5w")
@@ -67,4 +64,4 @@ cast_shadow = 0
 amount = 5000
 lifetime = 10.0
 process_material = ExtResource("6_i4hyn")
-draw_pass_1 = SubResource("CapsuleMesh_i4hyn")
+draw_pass_1 = ExtResource("7_blucx")

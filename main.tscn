@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://e4u5g547mg57" path="res://tree/textures/Red_Maple_Leaves_Hero_Fall_2.png" id="10_4c57u"]
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
+[ext_resource type="PackedScene" uid="uid://b51vera1iotqm" path="res://arrow.blend" id="12_dg77c"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cqfq"]
 width = 64
@@ -105,3 +106,6 @@ mesh = ExtResource("8_5vw27")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
+
+[node name="arrow" parent="." unique_id=254787145 instance=ExtResource("12_dg77c")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117319584, 2.7995367, -4.0919957)
