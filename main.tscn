@@ -62,7 +62,6 @@ shader_parameter/sway_phase_len = 8.0
 
 [node name="Terrain2" type="MeshInstance3D" parent="." unique_id=2064789127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-cast_shadow = 0
 mesh = SubResource("PlaneMesh_yaehf")
 
 [node name="Terrain" parent="." unique_id=931775018 instance=ExtResource("3_vivmo")]
@@ -107,5 +106,5 @@ skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
 
-[node name="arrow" parent="." unique_id=254787145 instance=ExtResource("12_dg77c")]
+[node name="arrow" parent="." unique_id=1635935480 instance=ExtResource("12_dg77c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117319584, 2.7995367, -4.0919957)
