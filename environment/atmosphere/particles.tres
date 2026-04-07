@@ -4,7 +4,7 @@
 
 [resource]
 shader = ExtResource("1_13shd")
-shader_parameter/wind_strength = 1.0
+shader_parameter/wind_strength = 0.75
 shader_parameter/min_scale = 0.2
-shader_parameter/max_scale = 4.0
+shader_parameter/max_scale = 3.0
 shader_parameter/stretch_factor = 8.0

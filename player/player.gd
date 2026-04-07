@@ -197,6 +197,11 @@ func rotate_camera(p_relative: Vector2) -> void:
 	# Apply sensitivity multiplier when aiming
 	var effective_sensitivity := mouse_sensitivity
 	if is_aiming and zoom_enabled:
+		print("=== Camera Info ===")
+		print("Position: ", _camera.global_position)
+		print("Rotation: ", _camera.global_rotation)
+		print("FOV: ", _camera.fov)
+		print("==================")
 		effective_sensitivity *= zoom_mouse_sensitivity_multiplier
 	
 	_camera_yaw.rotation.y -= p_relative.x * effective_sensitivity
@@ -214,7 +219,7 @@ func _handle_zoom(delta: float) -> void:
 	
 	# Check if aim button is held
 	is_aiming = Input.is_action_pressed("aim")
-	
+
 	# Smoothly transition FOV
 	var target_fov := zoom_fov if is_aiming else default_fov
 	current_fov = lerp(current_fov, target_fov, delta * zoom_speed)

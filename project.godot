@@ -27,6 +27,10 @@ window/size/initial_position_type=3
 window/stretch/mode="canvas_items"
 window/vsync/vsync_mode=0
 
+[editor]
+
+movie_writer/movie_file="/home/mare/Programs/Fax/Diploma/godot-fluidsim-lbm/movie/test.ogv"
+
 [input]
 
 move_left={

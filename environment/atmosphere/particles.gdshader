@@ -74,7 +74,10 @@ void process() {
     ////////////////////////////////////////////////////////////
     VELOCITY = wind * wind_strength;
     TRANSFORM[3].xyz += VELOCITY * DELTA;
-	COLOR = vec4(VELOCITY, 1.0);
+	
+	vec3 dir = normalize(VELOCITY);
+	
+	COLOR = vec4(dir * 1.0, 1.0);
 
     ////////////////////////////////////////////////////////////
     // Rotation + Scaling

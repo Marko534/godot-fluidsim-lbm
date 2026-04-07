@@ -78,20 +78,23 @@ background_mode = 1
 [node name="Main" type="Node3D" unique_id=1201869165]
 
 [node name="Visual" type="MeshInstance3D" parent="." unique_id=2064789127]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.212, -0.188, -0.019)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_yaehf")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=115228861]
 material_override = SubResource("StandardMaterial3D_vivmo")
 cast_shadow = 0
-amount = 10000
-lifetime = 10.0
+amount = 5000
+lifetime = 15.0
+collision_base_size = 0.0
+local_coords = true
 process_material = ExtResource("12_ycdy4")
 draw_pass_1 = ExtResource("13_w48qg")
 
 [node name="Terrain" parent="." unique_id=931775018 instance=ExtResource("3_vivmo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.315409, -0.5, 0)
+visible = false
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 visible = false
@@ -113,7 +116,8 @@ shape = SubResource("BoxShape3D_ig7tw")
 mesh = SubResource("BoxMesh_0xm2m")
 
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.8405838)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.268142, 0, -39.023888)
+visible = false
 
 [node name="Trees" type="Node3D" parent="." unique_id=2014823359]
 visible = false
@@ -134,3 +138,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117319584, 2.7995367, -4.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577890627]
 environment = SubResource("Environment_w48qg")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=608321734]
+transform = Transform3D(-0.8677654, 0.23713548, -0.43674922, 0, 0.8788171, 0.47715878, 0.49697396, 0.4140619, -0.7626071, -0.803, 1, -1.456)
+current = true
+fov = 35.0
