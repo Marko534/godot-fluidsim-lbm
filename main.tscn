@@ -89,6 +89,7 @@ amount = 5000
 lifetime = 15.0
 collision_base_size = 0.0
 local_coords = true
+trail_lifetime = 4.1499999999999995
 process_material = ExtResource("12_ycdy4")
 draw_pass_1 = ExtResource("13_w48qg")
 
@@ -141,5 +142,6 @@ environment = SubResource("Environment_w48qg")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=608321734]
 transform = Transform3D(-0.8677654, 0.23713548, -0.43674922, 0, 0.8788171, 0.47715878, 0.49697396, 0.4140619, -0.7626071, -0.803, 1, -1.456)
+visible = false
 current = true
 fov = 35.0

@@ -77,7 +77,9 @@ void process() {
 	
 	vec3 dir = normalize(VELOCITY);
 	
-	COLOR = vec4(dir * 1.0, 1.0);
+	COLOR = vec4(0.5 - dir, 1.0);
+	//COLOR = vec4(dir * 1.5, 1.0);
+	//COLOR = vec4(0.25, 0.25, 0.25, 1.0);
 
     ////////////////////////////////////////////////////////////
     // Rotation + Scaling
