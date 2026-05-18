@@ -380,3 +380,5 @@ func _input(p_event: InputEvent) -> void:
 				toggle_flashlight()
 			KEY_B:
 				blinking_enabled = not blinking_enabled
+			KEY_V:
+				$Camera3D.current = not $Camera3D.current

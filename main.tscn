@@ -12,7 +12,6 @@
 [ext_resource type="Texture2D" uid="uid://e4u5g547mg57" path="res://tree/textures/Red_Maple_Leaves_Hero_Fall_2.png" id="10_4c57u"]
 [ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_w48qg"]
 [ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_vivmo"]
-[ext_resource type="PackedScene" uid="uid://b51vera1iotqm" path="res://arrow.blend" id="12_dg77c"]
 [ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="12_ycdy4"]
 [ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="13_w48qg"]
 
@@ -48,12 +47,6 @@ albedo_color = Color(1, 0.3, 0.3, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 material = SubResource("StandardMaterial3D_w48qg")
 size = Vector2(30, 100)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
-size = Vector3(5, 5, 5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
-size = Vector3(4, 4, 4)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
 render_priority = 0
@@ -100,53 +93,37 @@ draw_pass_1 = ExtResource("13_w48qg")
 
 [node name="Terrain" parent="." unique_id=931775018 instance=ExtResource("3_vivmo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.315409, -0.5, 0)
-visible = false
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1686045979]
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1000948172]
+visible = false
 shape = SubResource("WorldBoundaryShape3D_7dm0k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=954571433]
+visible = false
 mesh = SubResource("PlaneMesh_ig7tw")
 
-[node name="Box" type="StaticBody3D" parent="." unique_id=1611278283]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -14.718)
-visible = false
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Box" unique_id=265799742]
-shape = SubResource("BoxShape3D_ig7tw")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Box" unique_id=2074951902]
-mesh = SubResource("BoxMesh_0xm2m")
-
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.268142, 0, -39.023888)
-visible = false
+transform = Transform3D(-0.97087973, 0, -0.2395673, 0, 1, 0, 0.2395673, 0, -0.97087973, 0.54260516, 1.913347, -4.0205917)
 
 [node name="Trees" type="Node3D" parent="." unique_id=2014823359]
-visible = false
 
 [node name="tree" parent="Trees" unique_id=1074596166 instance=ExtResource("7_272bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
 
 [node name="Tree" type="MeshInstance3D" parent="Trees" unique_id=2119363092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
-visible = false
 mesh = ExtResource("8_5vw27")
 skeleton = NodePath("../..")
 surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
 surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
-
-[node name="arrow" parent="." unique_id=1635935480 instance=ExtResource("12_dg77c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.117319584, 2.7995367, -4.0919957)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577890627]
 environment = SubResource("Environment_w48qg")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=608321734]
 transform = Transform3D(-0.8677654, 0.23713548, -0.43674922, 0, 0.8788171, 0.47715878, 0.49697396, 0.4140619, -0.7626071, -0.803, 1, -1.456)
-visible = false
 current = true
 fov = 35.0
