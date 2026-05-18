@@ -143,7 +143,9 @@ func _run_init() -> void:
 func _process(delta: float) -> void:
 	elapsed_time += delta
 	_update_params()
+	_compute_process()
 
+func _compute_process() -> void:
 	var compute_list = rd.compute_list_begin()
 
 	# 1. Collide

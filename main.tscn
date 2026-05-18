@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
 [ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player/player.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://bech.gd" id="1_vivmo"]
 [ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://environment/terrain/tarrain.gdshader" id="1_w48qg"]
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="2_vivmo"]
 [ext_resource type="PackedScene" uid="uid://xpwi1i7q5ybt" path="res://environment/weather.tscn" id="3_vivmo"]
@@ -37,6 +38,7 @@ disable_ambient_light = true
 disable_fog = true
 disable_specular_occlusion = true
 vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_7dm0k"]
 
@@ -76,6 +78,7 @@ shader_parameter/sway_phase_len = 8.0
 background_mode = 1
 
 [node name="Main" type="Node3D" unique_id=1201869165]
+script = ExtResource("1_vivmo")
 
 [node name="Visual" type="MeshInstance3D" parent="." unique_id=2064789127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -85,8 +88,10 @@ mesh = SubResource("PlaneMesh_yaehf")
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=115228861]
 material_override = SubResource("StandardMaterial3D_vivmo")
 cast_shadow = 0
-amount = 5000
-lifetime = 15.0
+amount = 10000
+lifetime = 60.0
+explosiveness = 1.0
+fixed_fps = 120
 collision_base_size = 0.0
 local_coords = true
 trail_lifetime = 4.1499999999999995
