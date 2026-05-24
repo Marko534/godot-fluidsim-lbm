@@ -3,11 +3,21 @@ extends Node3D
 @export var noise: FastNoiseLite
 
 # LBM Grid Dimensions
-const NX: int = 64
-const NY: int = 32
-const NZ: int = 64
+#const NX: int = 64
+#const NY: int = 32
+#const NZ: int = 64
+
+#const NX: int = 32
+#const NY: int = 16
+#const NZ: int = 32
+
+const NX: int = 128
+const NY: int = 64
+const NZ: int = 128
+
 const Q: int = 15
 #const Q: int = 19
+#const Q: int = 29
 
 # Rendering
 var rd: RenderingDevice
@@ -149,18 +159,14 @@ func _compute_process() -> void:
 	var compute_list = rd.compute_list_begin()
 
 	# 1. Collide
-	rd.draw_command_begin_label("LBM Collide D3Q15", Color.RED)
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
 	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
-	rd.draw_command_end_label()
 
 	# 2. Stream
-	rd.draw_command_begin_label("LBM Stream D3Q15", Color.GREEN)
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
-	rd.draw_command_end_label()
 	
 	rd.compute_list_end()
 

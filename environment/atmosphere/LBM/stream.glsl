@@ -3,7 +3,10 @@
 
 layout(local_size_x = 32, local_size_y = 1, local_size_z = 32) in;
 
+// Change to change alg
 #include "lbm15.glsl"
+// #include "lbm19.glsl"
+// #include "lbm27.glsl"
 
 void main(){
     const uint ind = (gl_GlobalInvocationID.x * params.NY + gl_GlobalInvocationID.y) * params.NZ + gl_GlobalInvocationID.z;
