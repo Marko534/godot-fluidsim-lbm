@@ -14,8 +14,13 @@ const float dt  = 1.0;
 
 void main(){
     const uint ind  = (gl_GlobalInvocationID.x * params.NY + gl_GlobalInvocationID.y) * params.NZ + gl_GlobalInvocationID.z;
-    const float _rho = getRho(ind);
-    vec3 _v          = getV(ind) / _rho;
+    // const float _rho = getRho(ind);
+    // vec3 _v          = getV(ind) / _rho;
+
+    float _rho;
+    vec3  _v;
+    float f_cache[Q];
+    getRhoV(ind, _rho, _v, f_cache);
 
     _v += dt * 0.0001 * c[4] / (2.0f * _rho);
 
@@ -30,17 +35,31 @@ void main(){
     for(int q = 0; q < Q; q++)
         ffeq[q] = equilibrium(q, _rho, _v);
 
+    // for(int q = 0; q < Q; q++){
+    //     float f_plus    = 0.5 * (F[ind*Q + q]    + F[ind*Q + cp[q]]);
+    //     float f_minus   = 0.5 * (F[ind*Q + q]    - F[ind*Q + cp[q]]);
+    //     float feq_plus  = 0.5 * (ffeq[q]          + ffeq[cp[q]]);
+    //     float feq_minus = 0.5 * (ffeq[q]          - ffeq[cp[q]]);
+
+    //     FPROP[ind*Q + q] = F[ind*Q + q]
+    //         - omega_plus  * (f_plus  - feq_plus)
+    //         - omega_minus * (f_minus - feq_minus);
+
+    //     if(B[ind] > 0.0)
+    //         FPROP[ind*Q + q] = equilibrium(q, 1.0, vec3(0));
+    // }
+    bool is_boundary = B[ind] > 0.0;
     for(int q = 0; q < Q; q++){
-        float f_plus    = 0.5 * (F[ind*Q + q]    + F[ind*Q + cp[q]]);
-        float f_minus   = 0.5 * (F[ind*Q + q]    - F[ind*Q + cp[q]]);
+        float f_plus    = 0.5 * (f_cache[q]      + f_cache[cp[q]]);
+        float f_minus   = 0.5 * (f_cache[q]      - f_cache[cp[q]]);
         float feq_plus  = 0.5 * (ffeq[q]          + ffeq[cp[q]]);
         float feq_minus = 0.5 * (ffeq[q]          - ffeq[cp[q]]);
 
-        FPROP[ind*Q + q] = F[ind*Q + q]
+        FPROP[ind*Q + q] = f_cache[q]
             - omega_plus  * (f_plus  - feq_plus)
             - omega_minus * (f_minus - feq_minus);
 
-        if(B[ind] > 0.0)
+        if(is_boundary)
             FPROP[ind*Q + q] = equilibrium(q, 1.0, vec3(0));
     }
 }

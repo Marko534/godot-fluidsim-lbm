@@ -17,8 +17,13 @@ void main(){
             F[ind*Q + q] = equilibrium(q, 1.0, vec3(0));
     }
 
-    float _rho = getRho(ind);
-    vec3  _v   = getV(ind) / _rho;
+    // float _rho = getRho(ind);
+    // vec3  _v   = getV(ind) / _rho;
+
+    float _rho;
+    vec3  _v;
+    float f_cache[Q];
+    getRhoV(ind, _rho, _v, f_cache);
 
     imageStore(velocity_tex_3d, ivec3(gl_GlobalInvocationID.xyz), vec4(_v, _rho));
 }

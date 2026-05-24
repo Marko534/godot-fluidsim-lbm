@@ -128,3 +128,16 @@ vec3 getV(uint index){
   return v;
 
 }
+
+// Replace getRho and getV with this single function
+void getRhoV(uint index, out float rho, out vec3 v, out float f_cache[Q]){
+    rho = 0.0;
+    v   = vec3(0.0);
+    for(int q = 0; q < Q; q++){
+        float f    = F[index*Q + q];
+        f_cache[q] = f;
+        rho        += f;
+        v          += f * vec3(c[q]);
+    }
+    v /= rho;
+}

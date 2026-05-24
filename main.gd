@@ -3,17 +3,17 @@ extends Node3D
 @export var noise: FastNoiseLite
 
 # LBM Grid Dimensions
-#const NX: int = 64
-#const NY: int = 32
-#const NZ: int = 64
+const NX: int = 64
+const NY: int = 32
+const NZ: int = 64
 
 #const NX: int = 32
 #const NY: int = 16
 #const NZ: int = 32
 
-const NX: int = 128
-const NY: int = 64
-const NZ: int = 128
+#const NX: int = 128
+#const NY: int = 64
+#const NZ: int = 128
 
 const Q: int = 15
 #const Q: int = 19
