@@ -1,7 +1,8 @@
 #[compute]
 #version 460 core
 
-layout(local_size_x = 32, local_size_y = 1, local_size_z = 32) in;
+// layout(local_size_x = 32, local_size_y = 1, local_size_z = 32) in;
+layout(local_size_x = 16, local_size_y = 2, local_size_z = 16) in;
 
 // Change to change alg
 #include "lbm15.glsl"

@@ -21,7 +21,8 @@ const Q: int = 15
 
 # Rendering
 var rd: RenderingDevice
-var layout_size: int = 32
+var layout_size:   int = 16
+var layout_size_y: int = 2
 
 # Buffers
 var buf_f: RID # distribution functions
@@ -147,7 +148,8 @@ func _run_init() -> void:
 	var compute_list = rd.compute_list_begin()
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_init)
 	rd.compute_list_bind_uniform_set(compute_list, uset_init, 0)
-	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
 	rd.compute_list_end()
 
 func _process(delta: float) -> void:
@@ -161,12 +163,14 @@ func _compute_process() -> void:
 	# 1. Collide
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
 	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
-	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
 
 	# 2. Stream
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
-	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
 	
 	rd.compute_list_end()
 
