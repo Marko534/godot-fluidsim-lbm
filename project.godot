@@ -31,6 +31,10 @@ window/vsync/vsync_mode=0
 
 movie_writer/movie_file="/home/mare/Programs/Fax/Diploma/godot-fluidsim-lbm/movie/test.ogv"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/renderdoc_launcher/plugin.cfg")
+
 [file_customization]
 
 folder_colors={
