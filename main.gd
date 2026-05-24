@@ -149,15 +149,19 @@ func _compute_process() -> void:
 	var compute_list = rd.compute_list_begin()
 
 	# 1. Collide
+	rd.draw_command_begin_label("LBM Collide D3Q15", Color.RED)
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
 	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
+	rd.draw_command_end_label()
 
 	# 2. Stream
+	rd.draw_command_begin_label("LBM Stream D3Q15", Color.GREEN)
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
-
+	rd.draw_command_end_label()
+	
 	rd.compute_list_end()
 
 func _update_params() -> void:
