@@ -122,8 +122,20 @@ surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577890627]
 environment = SubResource("Environment_w48qg")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=608321734]
-transform = Transform3D(-0.8677654, 0.23713548, -0.43674922, 0, 0.8788171, 0.47715878, 0.49697396, 0.4140619, -0.7626071, -0.803, 1, -1.456)
+[node name="3Cameras" type="Node3D" parent="." unique_id=285002469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0, 2)
+
+[node name="Top" type="Camera3D" parent="3Cameras" unique_id=1222152934]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3, -2)
+current = true
+fov = 40.0
+
+[node name="Inside" type="Camera3D" parent="3Cameras" unique_id=371558663]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.35, 0.06, -2.505)
+current = true
+
+[node name="Perspective" type="Camera3D" parent="3Cameras" unique_id=608321734]
+transform = Transform3D(-0.8677655, 0.23713551, -0.43674922, 0, 0.87881714, 0.47715878, 0.496974, 0.41406193, -0.7626071, -0.903, 1, -3.4559999)
 current = true
 fov = 35.0
 
