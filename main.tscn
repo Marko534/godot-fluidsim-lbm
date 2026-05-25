@@ -81,9 +81,9 @@ mesh = SubResource("PlaneMesh_yaehf")
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Visual" unique_id=115228861]
 material_override = SubResource("StandardMaterial3D_vivmo")
 cast_shadow = 0
-amount = 20000
+amount = 10000
 lifetime = 30.0
-explosiveness = 1.0
+explosiveness = 0.5
 fixed_fps = 120
 collision_base_size = 0.0
 local_coords = true
@@ -98,11 +98,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.315409, -0.5, 0)
 visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1000948172]
-visible = false
 shape = SubResource("WorldBoundaryShape3D_7dm0k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=954571433]
-visible = false
 mesh = SubResource("PlaneMesh_ig7tw")
 
 [node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
