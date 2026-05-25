@@ -70,6 +70,8 @@ shader_parameter/sway_phase_len = 8.0
 [sub_resource type="Environment" id="Environment_w48qg"]
 background_mode = 1
 
+[sub_resource type="TorusMesh" id="TorusMesh_w48qg"]
+
 [node name="Main" type="Node3D" unique_id=1201869165]
 script = ExtResource("1_vivmo")
 
@@ -124,3 +126,8 @@ environment = SubResource("Environment_w48qg")
 transform = Transform3D(-0.8677654, 0.23713548, -0.43674922, 0, 0.8788171, 0.47715878, 0.49697396, 0.4140619, -0.7626071, -0.803, 1, -1.456)
 current = true
 fov = 35.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1858696978]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+visible = false
+mesh = SubResource("TorusMesh_w48qg")

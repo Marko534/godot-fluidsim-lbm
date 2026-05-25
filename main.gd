@@ -1,19 +1,12 @@
 extends Node3D
 
 @export var noise: FastNoiseLite
+@export var mesh: MeshInstance3D
 
 # LBM Grid Dimensions
 const NX: int = 64
 const NY: int = 32
 const NZ: int = 64
-
-#const NX: int = 32
-#const NY: int = 16
-#const NZ: int = 32
-
-#const NX: int = 128
-#const NY: int = 64
-#const NZ: int = 128
 
 const Q: int = 15
 #const Q: int = 19
@@ -202,5 +195,41 @@ func _create_boundary_from_noise() -> PackedFloat32Array:
 				var i := (x * NY + y) * NZ + z
 				# Solid below height, fluid above
 				boundary[i] = 1.0 if y < height_cell else 0.0
+
+	return boundary
+	
+func _create_boundary_from_mesh(mesh_instance: MeshInstance3D) -> PackedFloat32Array:
+	var boundary := PackedFloat32Array()
+	boundary.resize(NX * NY * NZ)
+
+	# Get mesh AABB to normalize positions
+	var aabb      := mesh_instance.get_aabb()
+	var faces     := mesh_instance.mesh.get_faces()
+	var transform := mesh_instance.global_transform
+
+	for x in NX:
+		for z in NZ:
+			# Find highest Y of any triangle at this XZ position
+			var height_cell := 0
+			var wx := (float(x) / NX) * aabb.size.x + aabb.position.x
+			var wz := (float(z) / NZ) * aabb.size.z + aabb.position.z
+
+			for i in range(0, faces.size(), 3):
+				var a := transform * faces[i]
+				var b := transform * faces[i + 1]
+				var c := transform * faces[i + 2]
+				# Check if XZ is roughly inside triangle bounds
+				var min_x: float = min(a.x, min(b.x, c.x))
+				var max_x: float = max(a.x, max(b.x, c.x))
+				var min_z: float = min(a.z, min(b.z, c.z))
+				var max_z: float = max(a.z, max(b.z, c.z))
+				if wx >= min_x and wx <= max_x and wz >= min_z and wz <= max_z:
+					var avg_y    := (a.y + b.y + c.y) / 3.0
+					var cell_y   := int((avg_y - aabb.position.y) / aabb.size.y * NY)
+					height_cell   = max(height_cell, cell_y)
+
+			for y in NY:
+				var i        := (x * NY + y) * NZ + z
+				boundary[i]  = 1.0 if y < height_cell else 0.0
 
 	return boundary
