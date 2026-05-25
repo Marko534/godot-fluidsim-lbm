@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://wdnvcxxkyl20"]
 
-[ext_resource type="PackedScene" uid="uid://dthbml8cuqdw0" path="res://player/player.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://bech.gd" id="1_vivmo"]
 [ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://environment/terrain/tarrain.gdshader" id="1_w48qg"]
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="2_vivmo"]
@@ -106,10 +105,6 @@ shape = SubResource("WorldBoundaryShape3D_7dm0k")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=954571433]
 mesh = SubResource("PlaneMesh_ig7tw")
 
-[node name="Player" parent="." unique_id=1626674404 instance=ExtResource("1_ig7tw")]
-transform = Transform3D(-0.97087973, 0, -0.2395673, 0, 1, 0, 0.2395673, 0, -0.97087973, 0.54260516, 1.913347, -4.0205917)
-visible = false
-
 [node name="Trees" type="Node3D" parent="." unique_id=2014823359]
 
 [node name="tree" parent="Trees" unique_id=1074596166 instance=ExtResource("7_272bh")]
@@ -128,7 +123,7 @@ environment = SubResource("Environment_w48qg")
 [node name="Cameras" type="Node3D" parent="." unique_id=285002469 node_paths=PackedStringArray("cameras")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0, 2)
 script = ExtResource("15_vivmo")
-cameras = [NodePath("Perspective"), NodePath("Top"), NodePath("Inside")]
+cameras = [NodePath("Free"), NodePath("Perspective"), NodePath("Top"), NodePath("Inside")]
 
 [node name="Top" type="Camera3D" parent="Cameras" unique_id=1222152934]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 3, -2)
