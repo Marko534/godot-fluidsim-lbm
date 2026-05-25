@@ -17,14 +17,6 @@ layout (std430, binding = 2) buffer b {
 
 layout(set = 0, binding = 3, rgba32f) uniform restrict image3D velocity_tex_3d;
 
-// Size of Domain
-
-// Pass from Godot Script
-
-// uniform int NX = 1;
-// uniform int NY = 1;
-// uniform int NZ = 1;
-
 // uniform float t = 0.0f;
 
 layout(std140, binding = 5) uniform SimParams {
@@ -39,27 +31,6 @@ layout(std140, binding = 5) uniform SimParams {
 vec3 force = 0.1*vec3(cos(params.t), 0, sin(params.t));
 
 //vec3 force = 0.1*vec3(1, 0, 0);//vec3(cos(t), 0, sin(t));
-
-// Velocity Set
-
-/*
-
-const int Q = 9;
-const float w[Q] = {4.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/9.0, 1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0};
-const int cp[Q] = {0, 3, 4, 1, 2, 7, 8, 5, 6};
-const ivec2 c[Q] = {
-  ivec2(0, 0),
-  ivec2(1, 0),
-  ivec2(0, 1),
-  ivec2(-1, 0),
-  ivec2(0, -1),
-  ivec2(1, 1),
-  ivec2(-1, 1),
-  ivec2(-1, -1),
-  ivec2(1, -1)
-};
-
-*/
 
 const int Q = 19;
 

@@ -50,6 +50,7 @@ void main(){
     //         FPROP[ind*Q + q] = equilibrium(q, 1.0, vec3(0));
     // }
     bool is_boundary = B[ind] > 0.0;
+    
     for(int q = 0; q < Q; q++){
         float f_plus    = 0.5 * (f_cache[q]      + f_cache[cp[q]]);
         float f_minus   = 0.5 * (f_cache[q]      - f_cache[cp[q]]);
