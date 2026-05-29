@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://xpwi1i7q5ybt"]
 
-[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://main.gd" id="1_adq5w"]
+[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://scenes/weather.gd" id="1_adq5w"]
 [ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://environment/terrain/tarrain.gdshader" id="1_xxsnm"]
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="2_7n7uo"]
 [ext_resource type="PlaneMesh" uid="uid://bh0kfvdokbrsk" path="res://environment/atmosphere/wind.tres" id="4_q6ctr"]
