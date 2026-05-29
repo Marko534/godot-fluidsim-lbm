@@ -1,6 +1,5 @@
 extends Node3D
 
-@export var noise: FastNoiseLite
 @export var mesh: MeshInstance3D
 
 # LBM Grid Dimensions
@@ -58,7 +57,7 @@ func _create_buffers() -> void:
 	buf_f = rd.storage_buffer_create(cell_count * Q * float_bytes)
 	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
 
-	var boundary := _create_boundary_from_noise()
+	var boundary := _create_boundary_from_mesh()
 	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
 
 	buf_params = rd.uniform_buffer_create(16)
@@ -176,36 +175,15 @@ func _update_params() -> void:
 	data.encode_s32(8, NZ)
 	data.encode_float(12, elapsed_time)
 	rd.buffer_update(buf_params, 0, 16, data)
-
-func _create_boundary_from_noise() -> PackedFloat32Array:
-	var boundary := PackedFloat32Array()
-	boundary.resize(NX * NY * NZ)
-
-	# Get noise as image (already 64x64)
-	var img := noise.get_image(NX, NZ)
-
-	for x in NX:
-		for z in NZ:
-			# Sample noise pixel — red channel is height 0..1
-			var height_norm := img.get_pixel(x, z).r
-			# Map 0..1 height to 0..NY cell height
-			var height_cell := int(height_norm * NY)
-
-			for y in NY:
-				var i := (x * NY + y) * NZ + z
-				# Solid below height, fluid above
-				boundary[i] = 1.0 if y < height_cell else 0.0
-
-	return boundary
 	
-func _create_boundary_from_mesh(mesh_instance: MeshInstance3D) -> PackedFloat32Array:
+func _create_boundary_from_mesh() -> PackedFloat32Array:
 	var boundary := PackedFloat32Array()
 	boundary.resize(NX * NY * NZ)
 
 	# Get mesh AABB to normalize positions
-	var aabb      := mesh_instance.get_aabb()
-	var faces     := mesh_instance.mesh.get_faces()
-	var transform := mesh_instance.global_transform
+	var aabb      := mesh.get_aabb()
+	var faces     := mesh.mesh.get_faces()
+	var transform := mesh.global_transform
 
 	for x in NX:
 		for z in NZ:

@@ -1,39 +1,30 @@
 [gd_scene format=3 uid="uid://ci7a1a6v8nyq2"]
 
 [ext_resource type="Shader" uid="uid://cq8bsghcybdko" path="res://environment/donut/donut.gdshader" id="1_duj3u"]
-[ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="2_x5jx2"]
-[ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="3_gik3f"]
+[ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://main.gd" id="1_x5jx2"]
+[ext_resource type="Environment" uid="uid://r05ox81bdr3m" path="res://environment/weather.tres" id="2_duj3u"]
+[ext_resource type="Script" uid="uid://dik6gwqqdl1u8" path="res://scenes/donut_env.gd" id="3_x5jx2"]
+[ext_resource type="PackedScene" uid="uid://f35gcwij47tg" path="res://scenes/cameras.tscn" id="4_x5jx2"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cegan"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5d4n7"]
 render_priority = 0
 shader = ExtResource("1_duj3u")
 
-[sub_resource type="TorusMesh" id="TorusMesh_w48qg"]
-material = SubResource("ShaderMaterial_cegan")
-flip_faces = true
+[sub_resource type="TorusMesh" id="TorusMesh_07bwd"]
+material = SubResource("ShaderMaterial_5d4n7")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vivmo"]
-shading_mode = 0
-specular_mode = 2
-disable_ambient_light = true
-disable_fog = true
-disable_specular_occlusion = true
-vertex_color_use_as_albedo = true
-vertex_color_is_srgb = true
+[node name="Donut" type="Node3D" unique_id=1991704000]
+script = ExtResource("1_x5jx2")
 
-[node name="donut" type="MeshInstance3D" unique_id=1887359732]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
-mesh = SubResource("TorusMesh_w48qg")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1063449567]
+environment = ExtResource("2_duj3u")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=615147643]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 2.1855694e-08, -0.5)
-material_override = SubResource("StandardMaterial3D_vivmo")
-cast_shadow = 0
-amount = 10000
-lifetime = 15.0
-fixed_fps = 120
-collision_base_size = 0.0
-local_coords = true
-trail_lifetime = 4.1499999999999995
-process_material = ExtResource("2_x5jx2")
-draw_pass_1 = ExtResource("3_gik3f")
+[node name="GPU" type="Node3D" parent="." unique_id=2005096685 node_paths=PackedStringArray("mesh")]
+script = ExtResource("3_x5jx2")
+mesh = NodePath("../MeshInstance3D")
+
+[node name="Cameras" parent="." unique_id=1820577877 instance=ExtResource("4_x5jx2")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1541436338]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("TorusMesh_07bwd")
