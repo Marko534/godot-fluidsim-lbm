@@ -1,0 +1,11 @@
+Model Information:
+* title:	plane .glb file
+* source:	https://sketchfab.com/3d-models/plane-glb-file-830e71cde64c45569602eb78a32b4ef4
+* author:	farmangamer049 (https://sketchfab.com/farmangamer049)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "plane .glb file" (https://sketchfab.com/3d-models/plane-glb-file-830e71cde64c45569602eb78a32b4ef4) by farmangamer049 (https://sketchfab.com/farmangamer049) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

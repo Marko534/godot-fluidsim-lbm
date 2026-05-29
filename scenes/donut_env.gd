@@ -82,15 +82,7 @@ func _create_output_texture() -> void:
 	# Texture3DRD bridges the RD texture to Godot's material system
 	godot_texture_3d.texture_rd_rid = shared_texture_rid
 
-	var mesh_pres := load("res://environment/atmosphere/pressure.tres") as Mesh
-	var mat_pres := mesh_pres.surface_get_material(0)
-	mat_pres.set_shader_parameter("weather", godot_texture_3d)
-	
-	var mesh_wind := load("res://environment/atmosphere/wind.tres") as Mesh
-	var mat_wind := mesh_wind.surface_get_material(0)
-	mat_wind.set_shader_parameter("weather", godot_texture_3d)
-	
-	var mat_sim := load("res://environment/atmosphere/particles.tres") as Material
+	var mat_sim := load("res://environment/atmosphere/particles_donut.tres") as Material
 	mat_sim.set_shader_parameter("weather", godot_texture_3d)
 	
 func _make_uniform_set(shader: RID) -> RID:

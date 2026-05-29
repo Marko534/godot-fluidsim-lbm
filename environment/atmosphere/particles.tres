@@ -1,9 +1,9 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://dhvpmgemu5hq5"]
 
-[ext_resource type="Shader" uid="uid://vgai1udokhkm" path="res://environment/atmosphere/donut_flow.gdshader" id="1_fc1q1"]
+[ext_resource type="Shader" uid="uid://c6x805xu8bph6" path="res://environment/atmosphere/particles.gdshader" id="1_13shd"]
 
 [resource]
-shader = ExtResource("1_fc1q1")
+shader = ExtResource("1_13shd")
 shader_parameter/wind_strength = 0.75
 shader_parameter/min_scale = 0.3
 shader_parameter/max_scale = 3.0

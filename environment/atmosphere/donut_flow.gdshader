@@ -16,14 +16,12 @@ void start() {
         length(EMISSION_TRANSFORM[1].xyz),
         length(EMISSION_TRANSFORM[2].xyz)
     );
-
     TRANSFORM[3].xyz = (EMISSION_TRANSFORM * vec4(
         (rand(float(INDEX) + TIME)       * 2.0 - 1.0) * box_size.x,
-         rand(float(INDEX) + TIME + 1.0)              * box_size.y,
+        (rand(float(INDEX) + TIME + 1.0) * 2.0 - 1.0) * box_size.y,  // centered
         (rand(float(INDEX) + TIME + 2.0) * 2.0 - 1.0) * box_size.z,
         1.0
     )).xyz;
-
     VELOCITY = vec3(0.0);
     ACTIVE   = true;
 }
@@ -37,19 +35,19 @@ void process() {
 
     vec3 local_p = TRANSFORM[3].xyz - EMISSION_TRANSFORM[3].xyz;
 
-    // Kill outside box
-    if(local_p.x < -box_size.x || local_p.x > box_size.x ||
-       local_p.y < 0.0          || local_p.y > box_size.y ||
-       local_p.z < -box_size.z  || local_p.z > box_size.z){
-        ACTIVE = false;
-    }
-
-    // UVW from local position
-    vec3 uvw = vec3(
-        (local_p.x + box_size.x) / (box_size.x * 2.0),
-         local_p.y / box_size.y,
-        (local_p.z + box_size.z) / (box_size.z * 2.0)
-    );
+	// Kill outside box — Y now centered like X and Z
+	if(local_p.x < -box_size.x || local_p.x > box_size.x ||
+	   local_p.y < -box_size.y  || local_p.y > box_size.y ||
+	   local_p.z < -box_size.z  || local_p.z > box_size.z){
+	    ACTIVE = false;
+	}
+	
+	// UVW — remap -1..1 to 0..1 for Y too
+	vec3 uvw = vec3(
+	    (local_p.x + box_size.x) / (box_size.x * 2.0),
+	    (local_p.y + box_size.y) / (box_size.y * 2.0),  // centered
+	    (local_p.z + box_size.z) / (box_size.z * 2.0)
+	);
 
     vec3  wind       = texture(weather, uvw).xyz;
     float wind_speed = length(wind);
