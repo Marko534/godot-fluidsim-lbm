@@ -1,28 +1,27 @@
-extends Node3D
+extends GPUParticles3D # was extends Node3D
 
-@export var mesh: MeshInstance3D
 
 # LBM Grid Dimensions
 const NX: int = 64
-const NY: int = 32
+const NY: int = 64
 const NZ: int = 64
 
-const Q: int = 15
+#const Q: int = 15
 #const Q: int = 19
-#const Q: int = 29
+const Q: int = 27
 
 # Rendering
 var rd: RenderingDevice
-var layout_size:   int = 16
+var layout_size: int = 16
 var layout_size_y: int = 2
 
 # Buffers
-var buf_f: RID # distribution functions
-var buf_fprop: RID # post-collision
-var buf_b: RID # boundary
-var buf_params: RID # SimParams uniform buffer
+var buf_f: RID
+var buf_fprop: RID
+var buf_b: RID
+var buf_params: RID
 
-# Texture for V and RHO
+# Texture
 var shared_texture_rid: RID
 var godot_texture_3d: Texture3DRD = Texture3DRD.new()
 
@@ -39,17 +38,15 @@ var uset_stream: RID
 # State
 var elapsed_time: float = 0.0
 
-# Slice
-var pipeline_slice: RID
-var uset_slice: RID
-
+# -------------------------------------------------------------------------
 func _ready() -> void:
 	rd = RenderingServer.get_rendering_device()
 	_create_buffers()
 	_create_output_texture()
 	_setup_pipelines()
 	_run_init()
-	
+
+# -------------------------------------------------------------------------
 func _create_buffers() -> void:
 	var cell_count := NX * NY * NZ
 	var float_bytes := 4
@@ -57,13 +54,12 @@ func _create_buffers() -> void:
 	buf_f = rd.storage_buffer_create(cell_count * Q * float_bytes)
 	buf_fprop = rd.storage_buffer_create(cell_count * Q * float_bytes)
 
-	var boundary := _create_boundary_from_mesh()
+	var boundary := _create_boundary_from_children(self as GPUParticles3D)
 	buf_b = rd.storage_buffer_create(cell_count * float_bytes, boundary.to_byte_array())
-
 	buf_params = rd.uniform_buffer_create(16)
 
+# -------------------------------------------------------------------------
 func _create_output_texture() -> void:
-	# 3D texture matching the LBM grid exactly
 	var tf := RDTextureFormat.new()
 	tf.width = NX
 	tf.height = NY
@@ -72,19 +68,19 @@ func _create_output_texture() -> void:
 	tf.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
 	tf.texture_type = RenderingDevice.TEXTURE_TYPE_3D
 	tf.usage_bits = (
-		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT | # slice shader writes
-		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT | # material reads
+		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT |
+		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT |
 		RenderingDevice.TEXTURE_USAGE_CAN_UPDATE_BIT |
 		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT
 	)
 	shared_texture_rid = rd.texture_create(tf, RDTextureView.new(), [])
 
-	# Texture3DRD bridges the RD texture to Godot's material system
 	godot_texture_3d.texture_rd_rid = shared_texture_rid
 
 	var mat_sim := load("res://environment/atmosphere/particles_donut.tres") as Material
 	mat_sim.set_shader_parameter("weather", godot_texture_3d)
-	
+
+# -------------------------------------------------------------------------
 func _make_uniform_set(shader: RID) -> RID:
 	var uniforms: Array[RDUniform] = []
 
@@ -109,6 +105,7 @@ func _make_uniform_set(shader: RID) -> RID:
 
 	return rd.uniform_set_create(uniforms, shader, 0)
 
+# -------------------------------------------------------------------------
 func _setup_pipelines() -> void:
 	var init_shader := _load_shader("res://environment/atmosphere/LBM/init.glsl")
 	var collide_shader := _load_shader("res://environment/atmosphere/LBM/collide.glsl")
@@ -127,15 +124,16 @@ func _load_shader(path: String) -> RID:
 	var spirv: RDShaderSPIRV = file.get_spirv()
 	return rd.shader_create_from_spirv(spirv)
 
+# -------------------------------------------------------------------------
 func _run_init() -> void:
 	_update_params()
 	var compute_list = rd.compute_list_begin()
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_init)
 	rd.compute_list_bind_uniform_set(compute_list, uset_init, 0)
-	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
 	rd.compute_list_end()
 
+# -------------------------------------------------------------------------
 func _process(delta: float) -> void:
 	elapsed_time += delta
 	_update_params()
@@ -144,22 +142,18 @@ func _process(delta: float) -> void:
 func _compute_process() -> void:
 	var compute_list = rd.compute_list_begin()
 
-	# 1. Collide
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_collide)
 	rd.compute_list_bind_uniform_set(compute_list, uset_collide, 0)
-	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
 
-	# 2. Stream
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline_stream)
 	rd.compute_list_bind_uniform_set(compute_list, uset_stream, 0)
-	#rd.compute_list_dispatch(compute_list, NX / layout_size, NY, NZ / layout_size)
 	rd.compute_list_dispatch(compute_list, NX / layout_size, NY / layout_size_y, NZ / layout_size)
-	
+
 	rd.compute_list_end()
 
+# -------------------------------------------------------------------------
 func _update_params() -> void:
-	# Pack: NX(int), NY(int), NZ(int), t(float) — all 4 bytes each = 16 bytes
 	var data := PackedByteArray()
 	data.resize(16)
 	data.encode_s32(0, NX)
@@ -167,39 +161,56 @@ func _update_params() -> void:
 	data.encode_s32(8, NZ)
 	data.encode_float(12, elapsed_time)
 	rd.buffer_update(buf_params, 0, 16, data)
-	
-func _create_boundary_from_mesh() -> PackedFloat32Array:
+
+# -------------------------------------------------------------------------
+func _create_boundary_from_children(particles: GPUParticles3D) -> PackedFloat32Array:
 	var boundary := PackedFloat32Array()
 	boundary.resize(NX * NY * NZ)
 
-	# Get mesh AABB to normalize positions
-	var aabb      := mesh.get_aabb()
-	var faces     := mesh.mesh.get_faces()
-	var transform := mesh.global_transform
+	var sim_transform := particles.global_transform
+	var sim_size := Vector3(
+		sim_transform.basis.x.length(),
+		sim_transform.basis.y.length(),
+		sim_transform.basis.z.length()
+	)
+	var sim_origin := sim_transform.origin
 
+	# Collect all mesh faces from MeshInstance3D children
+	var all_faces: Array[Vector3] = []
+	for child in particles.get_children():
+		if child is MeshInstance3D:
+			var faces: PackedVector3Array = child.mesh.get_faces()
+			var xform: Transform3D = child.global_transform
+			for i in range(0, faces.size(), 3):
+				all_faces.append(xform * faces[i])
+				all_faces.append(xform * faces[i + 1])
+				all_faces.append(xform * faces[i + 2])
+
+	# Voxelize
 	for x in NX:
 		for z in NZ:
-			# Find highest Y of any triangle at this XZ position
 			var height_cell := 0
-			var wx := (float(x) / NX) * aabb.size.x + aabb.position.x
-			var wz := (float(z) / NZ) * aabb.size.z + aabb.position.z
+			var wx := sim_origin.x + (float(x) / NX - 0.5) * sim_size.x * 2.0
+			var wz := sim_origin.z + (float(z) / NZ - 0.5) * sim_size.z * 2.0
 
-			for i in range(0, faces.size(), 3):
-				var a := transform * faces[i]
-				var b := transform * faces[i + 1]
-				var c := transform * faces[i + 2]
-				# Check if XZ is roughly inside triangle bounds
+			for i in range(0, all_faces.size(), 3):
+				var a := all_faces[i]
+				var b := all_faces[i + 1]
+				var c := all_faces[i + 2]
+
 				var min_x: float = min(a.x, min(b.x, c.x))
 				var max_x: float = max(a.x, max(b.x, c.x))
 				var min_z: float = min(a.z, min(b.z, c.z))
 				var max_z: float = max(a.z, max(b.z, c.z))
+
 				if wx >= min_x and wx <= max_x and wz >= min_z and wz <= max_z:
-					var avg_y    := (a.y + b.y + c.y) / 3.0
-					var cell_y   := int((avg_y - aabb.position.y) / aabb.size.y * NY)
-					height_cell   = max(height_cell, cell_y)
+					var avg_y: float = (a.y + b.y + c.y) / 3.0
+					var norm_y: float = (avg_y - (sim_origin.y - sim_size.y)) / (sim_size.y * 2.0)
+					var cell_y: int = int(norm_y * NY)
+					height_cell = max(height_cell, cell_y)
 
 			for y in NY:
-				var i        := (x * NY + y) * NZ + z
-				boundary[i]  = 1.0 if y < height_cell else 0.0
+				var i := (x * NY + y) * NZ + z
+				boundary[i] = 1.0 if y < height_cell else 0.0
 
 	return boundary
