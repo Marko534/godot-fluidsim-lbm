@@ -2,13 +2,13 @@ extends GPUParticles3D # was extends Node3D
 
 
 # LBM Grid Dimensions
-const NX: int = 64
+const NX: int = 64 
 const NY: int = 64
 const NZ: int = 64
 
-#const Q: int = 15
+const Q: int = 15
 #const Q: int = 19
-const Q: int = 27
+#const Q: int = 27
 
 # Rendering
 var rd: RenderingDevice
