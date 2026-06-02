@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://6mm0ewlv4fxi"
+path="res://.godot/imported/16020_Cargo_Plane-Medium_Size-USA_v1.obj-3fe0fe4e65290a48e076dadc76f02ae4.mesh"
+
+[deps]
+
+files=["res://.godot/imported/16020_Cargo_Plane-Medium_Size-USA_v1.obj-3fe0fe4e65290a48e076dadc76f02ae4.mesh"]
+
+source_file="res://tree/planes/Cargo_Plane-Medium_Size-USA_v1_L1.123ce7666685-6976-43ff-8709-e0c08d4ac6a9/16020_Cargo_Plane-Medium_Size-USA_v1.obj"
+dest_files=["res://.godot/imported/16020_Cargo_Plane-Medium_Size-USA_v1.obj-3fe0fe4e65290a48e076dadc76f02ae4.mesh", "res://.godot/imported/16020_Cargo_Plane-Medium_Size-USA_v1.obj-3fe0fe4e65290a48e076dadc76f02ae4.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://7b5g4bgopieg"
+path="res://.godot/imported/B-2_high.obj-24bddc89fb618b560294d732a488235f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/B-2_high.obj-24bddc89fb618b560294d732a488235f.mesh"]
+
+source_file="res://tree/planes/52-b2/B2/B-2_high.obj"
+dest_files=["res://.godot/imported/B-2_high.obj-24bddc89fb618b560294d732a488235f.mesh", "res://.godot/imported/B-2_high.obj-24bddc89fb618b560294d732a488235f.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
