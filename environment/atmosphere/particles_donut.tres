@@ -4,7 +4,6 @@
 
 [resource]
 shader = ExtResource("1_jejo6")
-shader_parameter/size = Vector3(1, 1, 1)
 shader_parameter/wind_strength = 0.75
 shader_parameter/min_scale = 0.3
 shader_parameter/max_scale = 3.0
