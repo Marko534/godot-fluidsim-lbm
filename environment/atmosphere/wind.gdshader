@@ -9,7 +9,7 @@ varying vec3 wind;
 varying float pressure;
 
 void vertex() {
-    float slice_y = sin(TIME*0.5) * 0.5 + 0.5;  // oscillates 0..1
+    float slice_y = sin(50.0*0.5) * 0.5 + 0.5;  // oscillates 0..1
 	vec3 uvw  = vec3(UV.x, slice_y, UV.y);
     vec4 data = texture(weather, uvw);
     wind = data.xyz;

@@ -9,7 +9,7 @@ var run_timer: float = 0.0
 
 signal sim_rate_changed(new_rate)
 
-var sim_rate: SimRate = SimRate.UNCAPPED:
+@export  var sim_rate: SimRate = SimRate.UNCAPPED:
 	set(value):
 		sim_rate = value
 		sim_rate_changed.emit(value)

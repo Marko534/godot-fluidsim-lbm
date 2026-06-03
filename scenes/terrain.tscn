@@ -80,6 +80,5 @@ transform = Transform3D(-0.8677655, 0.23713551, -0.43674922, 0, 0.87881714, 0.47
 
 [node name="Free" parent="Cameras" index="3" unique_id=940266265]
 transform = Transform3D(-0.0018674561, 0.55620766, -0.8310413, -1.1641532e-10, 0.8310427, 0.55620867, 0.9999983, 0.0010386952, -0.0015519357, -6, 4.0564218, 0)
-fov = 75.0
 
 [editable path="Cameras"]

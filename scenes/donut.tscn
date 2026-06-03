@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://ci7a1a6v8nyq2"]
 
 [ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://main.gd" id="1_x5jx2"]
+[ext_resource type="Environment" uid="uid://r05ox81bdr3m" path="res://environment/weather.tres" id="2_esdew"]
 [ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="3_gik3f"]
 [ext_resource type="Script" uid="uid://dik6gwqqdl1u8" path="res://scenes/donut_env.gd" id="3_x5jx2"]
 [ext_resource type="PackedScene" uid="uid://f35gcwij47tg" path="res://scenes/cameras.tscn" id="4_x5jx2"]
@@ -8,6 +9,7 @@
 [ext_resource type="Material" uid="uid://5sed38o5nsqu" path="res://environment/atmosphere/particles_donut.tres" id="6_07bwd"]
 [ext_resource type="ArrayMesh" uid="uid://6mm0ewlv4fxi" path="res://tree/planes/Cargo_Plane-Medium_Size-USA_v1_L1.123ce7666685-6976-43ff-8709-e0c08d4ac6a9/16020_Cargo_Plane-Medium_Size-USA_v1.obj" id="7_07bwd"]
 [ext_resource type="ArrayMesh" uid="uid://xnyefpvi1ssj" path="res://tree/planes/airplane_v2_L2.123c71795678-4b63-46c4-b2c6-549c45f4c806/11805_airplane_v2_L2.obj" id="8_u5q71"]
+[ext_resource type="Shader" uid="uid://cq8bsghcybdko" path="res://environment/donut/donut.gdshader" id="9_8oxm3"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_5d4n7"]
 _surfaces = [{
@@ -31,8 +33,15 @@ disable_specular_occlusion = true
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qix0r"]
+render_priority = 0
+shader = ExtResource("9_8oxm3")
+
 [node name="Donut" type="Node3D" unique_id=1991704000]
 script = ExtResource("1_x5jx2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1684731190]
+environment = ExtResource("2_esdew")
 
 [node name="Cameras" parent="." unique_id=1820577877 instance=ExtResource("4_x5jx2")]
 
@@ -61,5 +70,6 @@ script = ExtResource("3_x5jx2")
 
 [node name="B2Low" type="MeshInstance3D" parent="Tunnel/GPUParticles3D" unique_id=1244306103]
 transform = Transform3D(-8.742278e-09, 0, -0.2, 0, 0.2, 0, 0.2, 0, -8.742278e-09, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_qix0r")
 mesh = ExtResource("6_5d4n7")
 skeleton = NodePath("../../..")

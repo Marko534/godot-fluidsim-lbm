@@ -5,7 +5,6 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aqvmx"]
 render_priority = 0
 shader = ExtResource("1_aqvmx")
-shader_parameter/pressure_scale = 50.0
 
 [resource]
 material = SubResource("ShaderMaterial_aqvmx")
