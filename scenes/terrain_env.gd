@@ -2,6 +2,10 @@ extends Node3D
 
 @export var noise: FastNoiseLite
 
+enum SimRate {UNCAPPED, HZ_60, HZ_30, HZ_1}
+var sim_rate: SimRate
+var sim_timer: float = 0.0
+
 # LBM Grid Dimensions
 const NX: int = 64
 const NY: int = 32
@@ -44,12 +48,19 @@ var pipeline_slice: RID
 var uset_slice: RID
 
 func _ready() -> void:
+	var root = get_parent()
+	sim_rate = root.sim_rate
+	root.sim_rate_changed.connect(_on_sim_rate_changed)
+	
 	rd = RenderingServer.get_rendering_device()
 	_create_buffers()
 	_create_output_texture()
 	_setup_pipelines()
 	_run_init()
 	
+func _on_sim_rate_changed(new_rate):
+	sim_rate = new_rate
+
 func _create_buffers() -> void:
 	var cell_count := NX * NY * NZ
 	var float_bytes := 4
@@ -146,8 +157,31 @@ func _run_init() -> void:
 
 func _process(delta: float) -> void:
 	elapsed_time += delta
-	_update_params()
-	_compute_process()
+	#sim_rate = get_parent().get_parent().sim_rate
+	#_update_pardams()
+	#_compute_process()
+	match sim_rate:
+		SimRate.UNCAPPED:
+			_update_params()
+			_compute_process()
+		SimRate.HZ_60:
+			sim_timer += delta
+			if sim_timer >= 1.0 / 60.0:
+				sim_timer = 0.0
+				_update_params()
+				_compute_process()
+		SimRate.HZ_30:
+			sim_timer += delta
+			if sim_timer >= 1.0 / 30.0:
+				sim_timer = 0.0
+				_update_params()
+				_compute_process()
+		SimRate.HZ_1:
+			sim_timer += delta
+			if sim_timer >= 1.0 / 1.0:
+				sim_timer = 0.0
+				_update_params()
+				_compute_process()
 
 func _compute_process() -> void:
 	var compute_list = rd.compute_list_begin()

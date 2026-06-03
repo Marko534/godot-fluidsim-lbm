@@ -24,5 +24,4 @@ fov = 35.0
 [node name="Free" type="Camera3D" parent="." unique_id=940266265]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.057, 0.23, 2)
 current = true
-fov = 35.0
 script = ExtResource("2_n25nf")
