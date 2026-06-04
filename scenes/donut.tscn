@@ -40,7 +40,6 @@ shader = ExtResource("9_8oxm3")
 [node name="Donut" type="Node3D" unique_id=1991704000]
 script = ExtResource("1_x5jx2")
 phase_duration = 60.0
-bench = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1684731190]
 environment = ExtResource("2_esdew")

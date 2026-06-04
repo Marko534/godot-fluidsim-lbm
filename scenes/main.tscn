@@ -37,7 +37,6 @@ vertex_color_is_srgb = true
 script = ExtResource("1_jbj1t")
 phase_duration = 60.0
 warmup_duration = 10.0
-bench = true
 
 [node name="GPU" type="Node3D" parent="." unique_id=1411712581]
 script = ExtResource("2_jbj1t")
