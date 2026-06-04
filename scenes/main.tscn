@@ -7,13 +7,6 @@
 [ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="3_dp3eg"]
 [ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="4_0ld40"]
 [ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="5_gqmmt"]
-[ext_resource type="PackedScene" uid="uid://baag53dnmirvs" path="res://tree/tree.blend" id="7_jscy8"]
-[ext_resource type="ArrayMesh" uid="uid://mbiagkcmkvnc" path="res://tree/tree.obj" id="8_pm3ni"]
-[ext_resource type="Shader" uid="uid://bylcbr8pu4x7c" path="res://tree/trunk.gdshader" id="9_y6deb"]
-[ext_resource type="Texture2D" uid="uid://c3610qklfryw6" path="res://tree/textures/RedMapleBark.png" id="10_og1vs"]
-[ext_resource type="Texture2D" uid="uid://7oqgtkuw0iob" path="res://tree/textures/RedMapleBark_Normal.png" id="11_2wyq8"]
-[ext_resource type="Shader" uid="uid://bwh0knkk2jk0c" path="res://tree/leaves.gdshader" id="12_vxglm"]
-[ext_resource type="Texture2D" uid="uid://e4u5g547mg57" path="res://tree/textures/Red_Maple_Leaves_Hero_Fall_2.png" id="13_2f3dj"]
 [ext_resource type="PackedScene" uid="uid://f35gcwij47tg" path="res://scenes/cameras.tscn" id="14_jkv2x"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cqfq"]
@@ -40,25 +33,6 @@ disable_specular_occlusion = true
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2cqfq"]
-render_priority = 0
-shader = ExtResource("9_y6deb")
-shader_parameter/texture_albedo = ExtResource("10_og1vs")
-shader_parameter/texture_normal = ExtResource("11_2wyq8")
-shader_parameter/transmission = Color(0, 0, 0, 1)
-shader_parameter/sway_speed = 10.0
-shader_parameter/sway_strength = 0.01
-shader_parameter/sway_phase_len = 8.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4c57u"]
-render_priority = 0
-shader = ExtResource("12_vxglm")
-shader_parameter/texture_albedo = ExtResource("13_2f3dj")
-shader_parameter/transmission = Color(0, 0, 0, 1)
-shader_parameter/sway_speed = 5.0
-shader_parameter/sway_strength = 0.2
-shader_parameter/sway_phase_len = 8.0
-
 [node name="Main" type="Node3D" unique_id=1201869165]
 script = ExtResource("1_jbj1t")
 phase_duration = 60.0
@@ -78,7 +52,6 @@ cast_shadow = 0
 mesh = SubResource("PlaneMesh_yaehf")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="terrain" unique_id=115228861]
-visible = false
 material_override = SubResource("StandardMaterial3D_vivmo")
 cast_shadow = 0
 amount = 10000
@@ -89,18 +62,5 @@ local_coords = true
 trail_lifetime = 4.1499999999999995
 process_material = ExtResource("4_0ld40")
 draw_pass_1 = ExtResource("5_gqmmt")
-
-[node name="Trees" type="Node3D" parent="." unique_id=2014823359]
-visible = false
-
-[node name="tree" parent="Trees" unique_id=1074596166 instance=ExtResource("7_jscy8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.918, -1.39, 2.332)
-
-[node name="Tree" type="MeshInstance3D" parent="Trees" unique_id=2119363092]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7349901, -2.3500235, 12.031012)
-mesh = ExtResource("8_pm3ni")
-skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_2cqfq")
-surface_material_override/1 = SubResource("ShaderMaterial_4c57u")
 
 [node name="Cameras" parent="." unique_id=1820577877 instance=ExtResource("14_jkv2x")]
