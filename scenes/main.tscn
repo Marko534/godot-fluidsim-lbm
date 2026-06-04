@@ -61,6 +61,9 @@ shader_parameter/sway_phase_len = 8.0
 
 [node name="Main" type="Node3D" unique_id=1201869165]
 script = ExtResource("1_jbj1t")
+phase_duration = 60.0
+warmup_duration = 10.0
+bench = true
 
 [node name="GPU" type="Node3D" parent="." unique_id=1411712581]
 script = ExtResource("2_jbj1t")
@@ -75,6 +78,7 @@ cast_shadow = 0
 mesh = SubResource("PlaneMesh_yaehf")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="terrain" unique_id=115228861]
+visible = false
 material_override = SubResource("StandardMaterial3D_vivmo")
 cast_shadow = 0
 amount = 10000

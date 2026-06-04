@@ -9,7 +9,7 @@ func _ready() -> void:
 		cameras[0].make_current()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("view"):  # spacebar or enter
+	if event.is_action_pressed("view"):
 		current_camera = (current_camera + 1) % cameras.size()
 		cameras[current_camera].make_current()
 		

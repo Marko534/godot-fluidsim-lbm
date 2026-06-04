@@ -13,7 +13,7 @@ const NZ: int = 64
 
 const Q: int = 15
 #const Q: int = 19
-#const Q: int = 29
+#const Q: int = 27
 
 # Rendering
 var rd: RenderingDevice
@@ -157,9 +157,7 @@ func _run_init() -> void:
 
 func _process(delta: float) -> void:
 	elapsed_time += delta
-	#sim_rate = get_parent().get_parent().sim_rate
-	#_update_pardams()
-	#_compute_process()
+
 	match sim_rate:
 		SimRate.UNCAPPED:
 			_update_params()
