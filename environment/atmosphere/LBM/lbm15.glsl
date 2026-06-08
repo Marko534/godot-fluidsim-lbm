@@ -25,6 +25,8 @@ layout(std140, binding = 5) uniform SimParams {
 } params;
 
 
+// vec3 force = vec3(0, -0.1, 0);
+
 vec3 force = vec3(0.1, 0, 0);
 
 // vec3 force = 0.1*vec3(cos(params.t), 0, sin(params.t));
