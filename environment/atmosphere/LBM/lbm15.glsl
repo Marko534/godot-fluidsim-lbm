@@ -17,6 +17,7 @@ layout (std430, binding = 2) buffer b {
 
 layout(set = 0, binding = 3, rgba32f) uniform restrict image3D velocity_tex_3d;
 
+// See if it can work without this 
 layout(std140, binding = 5) uniform SimParams {
     int NX;
     int NY;
