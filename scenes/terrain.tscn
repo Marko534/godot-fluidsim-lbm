@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://txqsdlpnjuri"]
+
+[ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://main.gd" id="1_0abrf"]
+[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://scenes/terrain_env.gd" id="2_23udb"]
+[ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="3_t5u1y"]
+[ext_resource type="Environment" uid="uid://r05ox81bdr3m" path="res://environment/weather.tres" id="4_4h6kj"]
+[ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://environment/terrain/tarrain.gdshader" id="5_e80jd"]
+[ext_resource type="PlaneMesh" uid="uid://b15cbsjkfuj2m" path="res://environment/atmosphere/pressure.tres" id="6_64y80"]
+[ext_resource type="PlaneMesh" uid="uid://bh0kfvdokbrsk" path="res://environment/atmosphere/wind.tres" id="7_wblkl"]
+[ext_resource type="PackedScene" uid="uid://f35gcwij47tg" path="res://scenes/cameras.tscn" id="8_m0l5f"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yaehf"]
+width = 64
+height = 64
+noise = ExtResource("3_t5u1y")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i4hyn"]
+render_priority = 0
+shader = ExtResource("5_e80jd")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_yaehf")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cegan"]
+material = SubResource("ShaderMaterial_i4hyn")
+subdivide_width = 64
+subdivide_depth = 64
+
+[node name="Terrain" type="Node3D" unique_id=931775018]
+script = ExtResource("1_0abrf")
+
+[node name="GPU" type="Node3D" parent="." unique_id=72052221]
+script = ExtResource("2_23udb")
+noise = ExtResource("3_t5u1y")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1908493412]
+environment = ExtResource("4_4h6kj")
+
+[node name="Pressure Visualisation" type="Node3D" parent="." unique_id=1362090680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -1.5)
+
+[node name="Terrain" type="MeshInstance3D" parent="Pressure Visualisation" unique_id=474828900]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_cegan")
+
+[node name="Pressure Visual Terrain" type="MeshInstance3D" parent="Pressure Visualisation" unique_id=1776843391]
+cast_shadow = 0
+mesh = ExtResource("6_64y80")
+
+[node name="Pressure Visual" type="MeshInstance3D" parent="Pressure Visualisation" unique_id=233114793]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+cast_shadow = 0
+mesh = ExtResource("6_64y80")
+
+[node name="Wind Visualisation" type="Node3D" parent="." unique_id=1977588444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 1.5)
+
+[node name="Terrain" type="MeshInstance3D" parent="Wind Visualisation" unique_id=30294599]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_cegan")
+
+[node name="Wind Visual Terrain" type="MeshInstance3D" parent="Wind Visualisation" unique_id=348829317]
+cast_shadow = 0
+mesh = ExtResource("7_wblkl")
+
+[node name="Wind Visual" type="MeshInstance3D" parent="Wind Visualisation" unique_id=112132448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+cast_shadow = 0
+mesh = ExtResource("7_wblkl")
+
+[node name="Cameras" parent="." unique_id=1820577877 instance=ExtResource("8_m0l5f")]
+
+[node name="Top" parent="Cameras" index="0" unique_id=1049115823]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 7, 0)
+
+[node name="Inside" parent="Cameras" index="1" unique_id=1125105911]
+transform = Transform3D(0.8592013, 0.25510007, -0.44350538, -0.024906075, 0.886661, 0.46174857, 0.5110311, -0.38568896, 0.7681738, -2.733, 2.933, 4.634)
+fov = 35.0
+
+[node name="Perspective" parent="Cameras" index="2" unique_id=392978442]
+transform = Transform3D(-0.8677655, 0.23713551, -0.43674922, 0, 0.87881714, 0.47715878, 0.496974, 0.41406193, -0.7626071, -2.7332668, 2.932541, -4.634469)
+
+[node name="Free" parent="Cameras" index="3" unique_id=940266265]
+transform = Transform3D(-0.0018674561, 0.55620766, -0.8310413, -1.1641532e-10, 0.8310427, 0.55620867, 0.9999983, 0.0010386952, -0.0015519357, -6, 4.0564218, 0)
+
+[editable path="Cameras"]

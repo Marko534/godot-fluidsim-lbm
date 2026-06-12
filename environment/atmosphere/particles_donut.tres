@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://5sed38o5nsqu"]
+
+[ext_resource type="Shader" uid="uid://vgai1udokhkm" path="res://environment/atmosphere/donut_flow.gdshader" id="1_jejo6"]
+
+[resource]
+shader = ExtResource("1_jejo6")
+shader_parameter/wind_strength = 0.75
+shader_parameter/min_scale = 0.3
+shader_parameter/max_scale = 3.0
+shader_parameter/stretch_factor = 8.0

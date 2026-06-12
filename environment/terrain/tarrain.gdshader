@@ -1,4 +1,5 @@
 shader_type spatial;
+render_mode wireframe, unshaded;
 
 uniform sampler2D heightmap;
 uniform sampler2D heightmap_normal : hint_normal;
@@ -11,5 +12,12 @@ void vertex() {
 }
 
 void fragment() {
-    ALBEDO = vec3(texture(heightmap, uv_coord).r, 0.0, 0.0);  // visualize height as gray
+    //ALBEDO = vec3(texture(heightmap, uv_coord).r, 0.0, 0.0);  // visualize height as gray
+	//float h = texture(heightmap, uv_coord).r;
+//
+	//vec3 low = vec3(0.0); // red
+	//vec3 high = vec3(0.2); // red
+	//
+	//ALBEDO = mix(low, high, h);
+	ALBEDO = texture(heightmap, UV).rgb;
 }

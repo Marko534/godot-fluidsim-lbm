@@ -2,3 +2,5 @@
 .godot/
 /android/
 debug/*
+stats/perf_charts/*
+stats/data/*

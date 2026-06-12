@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://wdnvcxxkyl20"]
+
+[ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://main.gd" id="1_jbj1t"]
+[ext_resource type="Script" uid="uid://bity0ba0tmwgq" path="res://scenes/terrain_env.gd" id="2_jbj1t"]
+[ext_resource type="Environment" uid="uid://r05ox81bdr3m" path="res://environment/weather.tres" id="2_jkv2x"]
+[ext_resource type="Shader" uid="uid://bm3c67jtcnru5" path="res://environment/terrain/tarrain.gdshader" id="2_muem4"]
+[ext_resource type="FastNoiseLite" uid="uid://qa46ycmopcc8" path="res://environment/terrain/noise.tres" id="3_dp3eg"]
+[ext_resource type="Material" uid="uid://dhvpmgemu5hq5" path="res://environment/atmosphere/particles.tres" id="4_0ld40"]
+[ext_resource type="ArrayMesh" uid="uid://hutmljbuvror" path="res://arrow.obj" id="5_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://f35gcwij47tg" path="res://scenes/cameras.tscn" id="14_jkv2x"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2cqfq"]
+width = 64
+height = 64
+noise = ExtResource("3_dp3eg")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_074og"]
+render_priority = 0
+shader = ExtResource("2_muem4")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_2cqfq")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yaehf"]
+material = SubResource("ShaderMaterial_074og")
+subdivide_width = 64
+subdivide_depth = 64
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vivmo"]
+shading_mode = 0
+specular_mode = 2
+disable_ambient_light = true
+disable_fog = true
+disable_specular_occlusion = true
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[node name="Main" type="Node3D" unique_id=1201869165]
+script = ExtResource("1_jbj1t")
+phase_duration = 60.0
+warmup_duration = 10.0
+
+[node name="GPU" type="Node3D" parent="." unique_id=1411712581]
+script = ExtResource("2_jbj1t")
+noise = ExtResource("3_dp3eg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=577890627]
+environment = ExtResource("2_jkv2x")
+
+[node name="terrain" type="MeshInstance3D" parent="." unique_id=2064789127]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_yaehf")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="terrain" unique_id=115228861]
+material_override = SubResource("StandardMaterial3D_vivmo")
+cast_shadow = 0
+amount = 10000
+lifetime = 15.0
+fixed_fps = 120
+collision_base_size = 0.0
+local_coords = true
+trail_lifetime = 4.1499999999999995
+process_material = ExtResource("4_0ld40")
+draw_pass_1 = ExtResource("5_gqmmt")
+
+[node name="Cameras" parent="." unique_id=1820577877 instance=ExtResource("14_jkv2x")]
