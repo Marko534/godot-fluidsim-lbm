@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://ci7a1a6v8nyq2"]
+[gd_scene format=3 uid="uid://ci7a1a6v8nyq2"]
 
 [ext_resource type="Script" uid="uid://bvqri76yyx57p" path="res://main.gd" id="1_x5jx2"]
 [ext_resource type="Environment" uid="uid://r05ox81bdr3m" path="res://environment/weather.tres" id="2_esdew"]
@@ -10,19 +10,6 @@
 [ext_resource type="ArrayMesh" uid="uid://6mm0ewlv4fxi" path="res://tree/planes/Cargo_Plane-Medium_Size-USA_v1_L1.123ce7666685-6976-43ff-8709-e0c08d4ac6a9/16020_Cargo_Plane-Medium_Size-USA_v1.obj" id="7_07bwd"]
 [ext_resource type="ArrayMesh" uid="uid://xnyefpvi1ssj" path="res://tree/planes/airplane_v2_L2.123c71795678-4b63-46c4-b2c6-549c45f4c806/11805_airplane_v2_L2.obj" id="8_u5q71"]
 [ext_resource type="Shader" uid="uid://cq8bsghcybdko" path="res://environment/donut/donut.gdshader" id="9_8oxm3"]
-
-[sub_resource type="ArrayMesh" id="ArrayMesh_5d4n7"]
-_surfaces = [{
-"aabb": AABB(-1.0005773, -1.0005773, -1.0005773, 2.0011547, 2.0011547, 2.0011547),
-"attribute_data": PackedByteArray("AAAAAAAAAACrqio/AAAAAKuqqj4AAAAAAACAPwAAAAAAAAAAAAAAP6uqKj8AAAA/q6qqPgAAAD8AAIA/AAAAP6uqqj4AAAAAAAAAAAAAAD+rqio/AAAAAKuqqj4AAAA/q6qqPgAAAD8AAAAAAACAP6uqKj8AAAA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6oqPwAAAD8AAIA/AAAAP6uqqj4AAIA/q6oqPwAAgD+rqio/AACAPwAAgD8AAIA/"),
-"format": 34359742487,
-"index_count": 36,
-"index_data": PackedByteArray("AAAEAAIAAgAEAAYAAQAFAAMAAwAFAAcACAAMAAoACgAMAA4ACQANAAsACwANAA8AEAAUABIAEgAUABYAEQAVABMAEwAVABcA"),
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 24,
-"vertex_data": PackedByteArray("6xKAv+sSgD/rEoA/6xKAP+sSgD/rEoC/6xKAP+sSgD/rEoA/6xKAv+sSgD/rEoC/6xKAv+sSgL/rEoA/6xKAP+sSgL/rEoC/6xKAP+sSgL/rEoA/6xKAv+sSgL/rEoC/6xKAP+sSgD/rEoA/6xKAv+sSgD/rEoC/6xKAP+sSgD/rEoC/6xKAv+sSgD/rEoA/6xKAP+sSgL/rEoA/6xKAv+sSgL/rEoC/6xKAP+sSgL/rEoC/6xKAv+sSgL/rEoA/6xKAP+sSgD/rEoA/6xKAv+sSgL/rEoA/6xKAv+sSgD/rEoA/6xKAP+sSgL/rEoA/6xKAP+sSgD/rEoC/6xKAv+sSgL/rEoC/6xKAv+sSgD/rEoC/6xKAP+sSgL/rEoC//3//f////7//////AAD/v/9//3////+//////wAA/7//f/9/////v/////8AAP+//3//f////7//////AAD/v///AID/////AAAAgP9//7///wCA/////wAAAID/f/+///8AgP////8AAACA/3//v///AID/////AAAAgP9//78AgP//AAD/vwCAAAD///+/AID//wAA/78AgAAA////vwCA//8AAP+/AIAAAP///78AgP//AAD/vwCAAAD///+/")
-}]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vivmo"]
 shading_mode = 0
@@ -48,14 +35,15 @@ environment = ExtResource("2_esdew")
 
 [node name="16020CargoPlaneMediumSizeUsaV1" type="MeshInstance3D" parent="." unique_id=1823918326]
 transform = Transform3D(0.005, 0, 0, 0, -2.1855694e-10, 0.005, 0, -0.005, -2.1855694e-10, -2.6281915, 0, 0)
+visible = false
 mesh = ExtResource("7_07bwd")
 
 [node name="11805AirplaneV2L2" type="MeshInstance3D" parent="." unique_id=1640340963]
 transform = Transform3D(-4.3711382e-11, -0.0009999999, -4.3711385e-11, 0, -4.3711385e-11, 0.0009999999, -0.0009999998, 4.3711385e-11, 1.9106853e-18, 0, -0.2982464, -4.2728376)
+visible = false
 mesh = ExtResource("8_u5q71")
 
 [node name="Tunnel" type="MeshInstance3D" parent="." unique_id=1480345737]
-mesh = SubResource("ArrayMesh_5d4n7")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="Tunnel" unique_id=544889579]
 material_override = SubResource("StandardMaterial3D_vivmo")

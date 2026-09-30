@@ -2,3 +2,4 @@
 
 [resource]
 background_mode = 1
+background_color = Color(0.14117648, 0.12156863, 0.19215687, 1)
